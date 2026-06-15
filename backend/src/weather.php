@@ -75,6 +75,7 @@ require_once 'func.php';
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.php">首页</a></li>
                     <li class="nav-item"><a class="nav-link" href="mail.php">意见信箱</a></li>
+                    <li class="nav-item"><a class="nav-link" href="budget.php">预决算公开</a></li>
                     <li class="nav-item"><a class="nav-link active" href="weather.php">气象服务</a></li>
                     <li class="nav-item">
                         <a class="nav-link bg-danger rounded px-3 ms-2" href="emergency_report.php">

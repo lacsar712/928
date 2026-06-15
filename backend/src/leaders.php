@@ -357,6 +357,7 @@ require_once 'func.php';
                     <li class="nav-item"><a class="nav-link" href="index.php">首页</a></li>
                     <li class="nav-item"><a class="nav-link active" href="leaders.php">领导信息</a></li>
                     <li class="nav-item"><a class="nav-link" href="mail.php">意见信箱</a></li>
+                    <li class="nav-item"><a class="nav-link" href="budget.php">预决算公开</a></li>
                     <li class="nav-item">
                         <a class="nav-link bg-danger rounded px-3 ms-2" href="emergency_report.php">
                             <i class="bi bi-exclamation-triangle-fill me-1"></i><strong>应急上报</strong>

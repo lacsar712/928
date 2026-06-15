@@ -35,6 +35,9 @@ check_login();
                     <a href="index.php" class="list-group-item list-group-item-action">
                         <i class="bi bi-speedometer2 me-2"></i>返回控制台
                     </a>
+                    <a href="budget.php" class="list-group-item list-group-item-action">
+                        <i class="bi bi-cash-stack me-2"></i>预决算管理
+                    </a>
                     <a href="mail.php" class="list-group-item list-group-item-action">
                         <i class="bi bi-envelope-open me-2"></i>意见信箱
                     </a>

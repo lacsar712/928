@@ -60,6 +60,7 @@ $logged_in = isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in']
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.php"><i class="bi bi-house me-1"></i>返回首页</a></li>
                     <li class="nav-item"><a class="nav-link" href="mail.php">意见信箱</a></li>
+                    <li class="nav-item"><a class="nav-link" href="budget.php">预决算公开</a></li>
                     <?php if ($logged_in): ?>
                         <li class="nav-item">
                             <a class="nav-link bg-light text-primary rounded px-3 ms-2 fw-bold" href="admin/meeting_rooms.php">

@@ -45,6 +45,9 @@ check_login();
                     <a href="meeting_rooms.php" class="list-group-item list-group-item-action">
                         <i class="bi bi-door-open me-2"></i>会议室管理
                     </a>
+                    <a href="budget.php" class="list-group-item list-group-item-action">
+                        <i class="bi bi-cash-stack me-2"></i>预决算管理
+                    </a>
                     <a href="mail.php" class="list-group-item list-group-item-action">
                         <i class="bi bi-envelope-open me-2"></i>意见信箱
                     </a>
