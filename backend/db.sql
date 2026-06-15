@@ -55,4 +55,33 @@ CREATE TABLE `sys_logs` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- ----------------------------
+-- Table structure for emergency_events
+-- ----------------------------
+DROP TABLE IF EXISTS `emergency_events`;
+CREATE TABLE `emergency_events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `event_no` varchar(32) NOT NULL COMMENT '事件编号',
+  `event_type` varchar(20) NOT NULL COMMENT '事件类型：自然灾害/事故灾难/公共卫生/社会安全',
+  `severity` tinyint(1) NOT NULL COMMENT '严重等级：1-Ⅰ级 2-Ⅱ级 3-Ⅲ级 4-Ⅳ级',
+  `occur_time` datetime NOT NULL COMMENT '发生时间',
+  `location` varchar(255) NOT NULL COMMENT '地点描述',
+  `longitude` decimal(10,7) DEFAULT NULL COMMENT '经度',
+  `latitude` decimal(10,7) DEFAULT NULL COMMENT '纬度',
+  `description` text NOT NULL COMMENT '现场描述',
+  `images` varchar(1000) DEFAULT NULL COMMENT '图片路径，逗号分隔',
+  `is_anonymous` tinyint(1) DEFAULT 0 COMMENT '是否匿名：0-否 1-是',
+  `reporter_name` varchar(50) DEFAULT NULL COMMENT '上报人姓名',
+  `reporter_phone` varchar(20) DEFAULT NULL COMMENT '上报人电话',
+  `status` tinyint(1) DEFAULT 1 COMMENT '状态：1-待处理 2-已派单 3-已处置 4-已归档',
+  `ip_address` varchar(50) DEFAULT NULL COMMENT '上报IP',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `event_no` (`event_no`),
+  KEY `severity` (`severity`),
+  KEY `status` (`status`),
+  KEY `create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='突发事件应急上报';
+
 SET FOREIGN_KEY_CHECKS = 1;

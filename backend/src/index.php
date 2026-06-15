@@ -24,7 +24,7 @@ $result = mysqli_query($conn, $sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GovCore 政务公开与应急指挥平台</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
@@ -43,6 +43,11 @@ $result = mysqli_query($conn, $sql);
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link active" href="index.php">首页</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link bg-danger rounded px-3 ms-2" href="emergency_report.php">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i><strong>应急上报</strong>
+                        </a>
+                    </li>
                     <li class="nav-item"><a class="nav-link" href="admin/login.php">管理登录</a></li>
                 </ul>
             </div>
@@ -147,17 +152,35 @@ $result = mysqli_query($conn, $sql);
             </div>
  <!-- Sidebar -->
             <div class="col-md-4">
+                <!-- 应急上报入口 -->
+                <div class="card border-0 shadow-sm mb-4 bg-gradient-to-r from-danger to-danger">
+                    <div class="card-body p-4 text-white" style="background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%);">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                <i class="bi bi-exclamation-triangle-fill display-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0 fw-bold">突发事件应急上报</h5>
+                                <small class="opacity-75">快速响应 · 及时处置</small>
+                            </div>
+                        </div>
+                        <p class="mb-3 small opacity-90">如遇自然灾害、事故灾难、公共卫生或社会安全事件，请立即上报。</p>
+                        <a href="emergency_report.php" class="btn btn-light text-danger fw-bold w-100">
+                            <i class="bi bi-send-fill me-2"></i>立即上报
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 便民服务 -->
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-gov-blue text-white py-3">
                         <h6 class="mb-0">便民服务</h6>
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                        <div class="d-grid gap-2">
                             <button class="btn btn-outline-secondary text-start feature-btn" type="button">📝 在线办事申请</button>
                             <button class="btn btn-outline-secondary text-start feature-btn" type="button">🔍 办件进度查询</button>
                             <button class="btn btn-outline-secondary text-start feature-btn" type="button">📞 12345 热线</button>
-                        </div>
                         </div>
                     </div>
                 </div>

@@ -53,6 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <a href="index.php" class="list-group-item list-group-item-action">
                         <i class="bi bi-speedometer2 me-2"></i>控制台
                     </a>
+                    <a href="emergency.php" class="list-group-item list-group-item-action">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>应急事件
+                    </a>
                     <a href="net_tool.php" class="list-group-item list-group-item-action active">
                         <i class="bi bi-broadcast me-2"></i>网络检测工具
                     </a>
