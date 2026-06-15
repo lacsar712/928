@@ -98,6 +98,9 @@ check_login();
                     <a href="weather_config.php" class="list-group-item list-group-item-action">
                         <i class="bi bi-cloud-sun me-2"></i>气象数据源
                     </a>
+                    <a href="recruit.php" class="list-group-item list-group-item-action">
+                        <i class="bi bi-briefcase me-2"></i>招聘管理
+                    </a>
                     <a href="leaders.php" class="list-group-item list-group-item-action active">
                         <i class="bi bi-people-fill me-2"></i>领导干部信息
                     </a>

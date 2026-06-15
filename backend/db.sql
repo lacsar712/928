@@ -388,3 +388,56 @@ INSERT INTO `department_budget` (`year`, `department`, `budget_income`, `budget_
 (2026, '市自然资源局', 92000.00, 86000.00, 0.00, 0.00);
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- Table structure for recruit_positions
+-- ----------------------------
+DROP TABLE IF EXISTS `recruit_positions`;
+CREATE TABLE `recruit_positions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(200) NOT NULL COMMENT '岗位名称',
+  `department` varchar(100) NOT NULL COMMENT '招聘单位',
+  `education` varchar(50) NOT NULL COMMENT '学历要求',
+  `headcount` int(11) NOT NULL DEFAULT 1 COMMENT '招聘人数',
+  `deadline` date NOT NULL COMMENT '报名截止日期',
+  `responsibility` text COMMENT '岗位职责',
+  `requirement` text COMMENT '任职要求',
+  `apply_method` varchar(500) DEFAULT NULL COMMENT '报名方式',
+  `status` tinyint(1) DEFAULT 1 COMMENT '状态：1-招聘中 0-已关闭',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `department` (`department`),
+  KEY `education` (`education`),
+  KEY `deadline` (`deadline`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公开招聘岗位';
+
+INSERT INTO `recruit_positions` (`title`, `department`, `education`, `headcount`, `deadline`, `responsibility`, `requirement`, `apply_method`, `status`) VALUES
+('综合文秘', '市政府办公室', '本科', 2, '2026-07-31', '1. 负责各类公文、讲话稿、汇报材料的起草与审核；\n2. 负责会议纪要整理与签发；\n3. 承办领导交办的其它文秘工作。', '1. 全日制本科及以上学历，汉语言文学、行政管理等相关专业；\n2. 具有较强的文字功底和公文写作能力；\n3. 熟悉办公软件操作，具有良好的沟通协调能力；\n4. 年龄35周岁以下，有相关工作经验者优先。', '请登录系统点击"我要报名"在线提交申请，上传个人简历PDF。', 1),
+('网络安全工程师', '市大数据中心', '本科', 1, '2026-08-15', '1. 负责政务网络与信息系统的安全监测与防护；\n2. 定期开展安全漏洞扫描与渗透测试；\n3. 编写安全评估报告，提出整改建议。', '1. 全日制本科及以上学历，计算机科学、信息安全等相关专业；\n2. 熟悉网络安全攻防技术，具有CISP、CISSP等证书者优先；\n3. 具有2年以上网络安全相关工作经验；\n4. 年龄40周岁以下。', '请登录系统点击"我要报名"在线提交申请，上传个人简历PDF。', 1),
+('城市规划师', '市住建局', '硕士', 1, '2026-07-20', '1. 负责城市总体规划、控制性详细规划的编制与修订；\n2. 参与重大建设项目的规划审查；\n3. 开展城市规划相关课题研究。', '1. 全日制硕士及以上学历，城乡规划、建筑学等相关专业；\n2. 熟练使用AutoCAD、ArcGIS等专业软件；\n3. 具有3年以上规划编制工作经验；\n4. 具有注册城乡规划师资格者优先。', '请登录系统点击"我要报名"在线提交申请，上传个人简历PDF。', 1),
+('财务审计专员', '市财政局', '本科', 2, '2026-08-30', '1. 负责部门预算编制与执行监督；\n2. 开展财政专项资金审计；\n3. 编写审计报告，跟踪整改落实。', '1. 全日制本科及以上学历，会计学、审计学、财务管理等相关专业；\n2. 具有初级会计师及以上职称；\n3. 熟悉财经法规及审计准则；\n4. 具有2年以上财务或审计工作经验。', '请登录系统点击"我要报名"在线提交申请，上传个人简历PDF。', 1),
+('应急管理专员', '市应急管理局', '本科', 3, '2026-09-15', '1. 负责突发事件应急预案的编制与修订；\n2. 组织应急演练与培训；\n3. 参与突发事件应急处置与协调工作。', '1. 全日制本科及以上学历，安全工程、应急管理等相关专业；\n2. 具有较强的组织协调和应急处置能力；\n3. 熟悉应急管理相关法律法规；\n4. 年龄35周岁以下，退伍军人优先。', '请登录系统点击"我要报名"在线提交申请，上传个人简历PDF。', 1),
+('公共卫生医师', '市卫健委', '硕士', 1, '2026-08-10', '1. 负责传染病监测与流行病学调查；\n2. 参与公共卫生事件应急处置；\n3. 开展健康教育和疾病预防控制工作。', '1. 全日制硕士及以上学历，公共卫生与预防医学等相关专业；\n2. 具有执业医师资格证；\n3. 熟悉疾病预防控制相关业务；\n4. 具有2年以上公共卫生相关工作经验者优先。', '请登录系统点击"我要报名"在线提交申请，上传个人简历PDF。', 1),
+('政务服务窗口专员', '市行政审批局', '大专', 5, '2026-07-25', '1. 负责政务大厅窗口业务的受理与办理；\n2. 解答群众咨询，提供办事指引；\n3. 做好业务台账登记与数据统计。', '1. 大专及以上学历，专业不限；\n2. 普通话标准，具有良好的服务意识和沟通能力；\n3. 熟悉电脑操作及常用办公软件；\n4. 年龄30周岁以下，形象气质佳。', '请登录系统点击"我要报名"在线提交申请，上传个人简历PDF。', 1),
+('法律顾问', '市司法局', '硕士', 1, '2026-09-01', '1. 负责政府合同的合法性审查；\n2. 参与行政复议与行政诉讼案件处理；\n3. 为各部门提供法律咨询与指导。', '1. 全日制硕士及以上学历，法学等相关专业；\n2. 具有法律职业资格证A证；\n3. 具有3年以上法律实务工作经验；\n4. 熟悉行政法律法规体系。', '请登录系统点击"我要报名"在线提交申请，上传个人简历PDF。', 1);
+
+-- ----------------------------
+-- Table structure for recruit_applications
+-- ----------------------------
+DROP TABLE IF EXISTS `recruit_applications`;
+CREATE TABLE `recruit_applications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `position_id` int(11) NOT NULL COMMENT '岗位ID',
+  `name` varchar(50) NOT NULL COMMENT '姓名',
+  `phone` varchar(20) NOT NULL COMMENT '手机号',
+  `email` varchar(100) NOT NULL COMMENT '邮箱',
+  `resume` varchar(500) DEFAULT NULL COMMENT '简历PDF路径',
+  `ip_address` varchar(50) DEFAULT NULL COMMENT '提交IP',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `position_id` (`position_id`),
+  KEY `phone` (`phone`),
+  KEY `create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公开招聘报名记录';

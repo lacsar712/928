@@ -45,6 +45,7 @@ $result = mysqli_query($conn, $sql);
                     <li class="nav-item"><a class="nav-link active" href="index.php">首页</a></li>
                     <li class="nav-item"><a class="nav-link" href="mail.php">意见信箱</a></li>
                     <li class="nav-item"><a class="nav-link" href="budget.php">预决算公开</a></li>
+                    <li class="nav-item"><a class="nav-link" href="recruit.php">公开招聘</a></li>
                     <li class="nav-item">
                         <a class="nav-link bg-danger rounded px-3 ms-2" href="emergency_report.php">
                             <i class="bi bi-exclamation-triangle-fill me-1"></i><strong>应急上报</strong>
@@ -198,6 +199,24 @@ $result = mysqli_query($conn, $sql);
                 </div>
 
                 <!-- 便民服务 -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4 text-white" style="background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                <i class="bi bi-briefcase-fill display-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0 fw-bold">公开招聘</h5>
+                                <small class="opacity-75">公平公正 · 广纳贤才</small>
+                            </div>
+                        </div>
+                        <p class="mb-3 small opacity-90">查看最新招聘岗位信息，在线提交报名申请。</p>
+                        <a href="recruit.php" class="btn btn-light fw-bold w-100" style="color: #28a745;">
+                            <i class="bi bi-search me-2"></i>查看岗位
+                        </a>
+                    </div>
+                </div>
+
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-gov-blue text-white py-3">
                         <h6 class="mb-0">便民服务</h6>
