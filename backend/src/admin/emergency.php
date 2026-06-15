@@ -98,6 +98,9 @@ check_login();
                     <a href="upload.php" class="list-group-item list-group-item-action">
                         <i class="bi bi-cloud-upload me-2"></i>政策文件上传
                     </a>
+                    <a href="opinion_dashboard.php" class="list-group-item list-group-item-action">
+                        <i class="bi bi-radar me-2"></i>舆情监测看板
+                    </a>
                 </div>
             </div>
 

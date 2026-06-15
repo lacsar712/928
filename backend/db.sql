@@ -84,4 +84,62 @@ CREATE TABLE `emergency_events` (
   KEY `create_time` (`create_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='突发事件应急上报';
 
+-- ----------------------------
+-- Table structure for opinion_keywords
+-- ----------------------------
+DROP TABLE IF EXISTS `opinion_keywords`;
+CREATE TABLE `opinion_keywords` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `keyword` varchar(100) NOT NULL COMMENT '关键词',
+  `sentiment` tinyint(1) NOT NULL DEFAULT 0 COMMENT '情感标签：1-正向 2-中性 3-负向',
+  `weight` int(11) DEFAULT 1 COMMENT '权重',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `keyword` (`keyword`),
+  KEY `sentiment` (`sentiment`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='舆情监测关键词';
+
+-- ----------------------------
+-- Records of opinion_keywords
+-- ----------------------------
+INSERT INTO `opinion_keywords` (`keyword`, `sentiment`, `weight`) VALUES
+('满意度提升', 1, 2),
+('便民服务', 1, 1),
+('高效办理', 1, 1),
+('点赞', 1, 2),
+('服务态度好', 1, 2),
+('效率低', 3, 2),
+('投诉', 3, 3),
+('不作为', 3, 3),
+('乱收费', 3, 3),
+('态度恶劣', 3, 2),
+('咨询', 2, 1),
+('建议', 2, 1),
+('反馈', 2, 1),
+('疑问', 2, 1),
+('流程', 2, 1);
+
+-- ----------------------------
+-- Table structure for opinion_data
+-- ----------------------------
+DROP TABLE IF EXISTS `opinion_data`;
+CREATE TABLE `opinion_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL COMMENT '舆情标题',
+  `content` text COMMENT '舆情内容',
+  `source_platform` varchar(50) DEFAULT NULL COMMENT '来源平台',
+  `sentiment` tinyint(1) DEFAULT 2 COMMENT '情感倾向：1-正向 2-中性 3-负向',
+  `matched_keywords` varchar(500) DEFAULT NULL COMMENT '命中关键词，JSON格式',
+  `publish_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
+  `crawl_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '抓取时间',
+  `author` varchar(100) DEFAULT NULL COMMENT '发布作者',
+  `url` varchar(500) DEFAULT NULL COMMENT '原文链接',
+  PRIMARY KEY (`id`),
+  KEY `sentiment` (`sentiment`),
+  KEY `source_platform` (`source_platform`),
+  KEY `publish_time` (`publish_time`),
+  KEY `crawl_time` (`crawl_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='舆情监测数据';
+
 SET FOREIGN_KEY_CHECKS = 1;
