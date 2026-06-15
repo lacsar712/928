@@ -141,6 +141,7 @@ require_once 'func.php';
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.php">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="mail.php">意见信箱</a></li>
                     <li class="nav-item"><a class="nav-link active bg-danger rounded" href="emergency_report.php"><i class="bi bi-exclamation-triangle-fill me-1"></i>应急上报</a></li>
                     <li class="nav-item"><a class="nav-link" href="admin/login.php">管理登录</a></li>
                 </ul>

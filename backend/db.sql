@@ -225,4 +225,57 @@ CREATE TABLE `meeting_bookings` (
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='会议室预约记录';
 
+-- ----------------------------
+-- Table structure for mail_messages
+-- ----------------------------
+DROP TABLE IF EXISTS `mail_messages`;
+CREATE TABLE `mail_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `message_no` varchar(32) NOT NULL COMMENT '留言编号',
+  `name` varchar(50) NOT NULL COMMENT '姓名',
+  `email` varchar(100) NOT NULL COMMENT '邮箱',
+  `subject` varchar(255) NOT NULL COMMENT '主题',
+  `content` text NOT NULL COMMENT '留言内容',
+  `is_public` tinyint(1) DEFAULT 1 COMMENT '是否公开：0-否 1-是',
+  `status` tinyint(1) DEFAULT 0 COMMENT '审核状态：0-待审 1-已通过 2-已拒绝',
+  `reply_content` text COMMENT '官方回复内容',
+  `reply_time` datetime DEFAULT NULL COMMENT '回复时间',
+  `reply_admin` varchar(50) DEFAULT NULL COMMENT '回复管理员',
+  `ip_address` varchar(50) DEFAULT NULL COMMENT '提交IP',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `message_no` (`message_no`),
+  KEY `status` (`status`),
+  KEY `is_public` (`is_public`),
+  KEY `create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='意见信箱留言';
+
+-- ----------------------------
+-- Table structure for mail_sensitive_words
+-- ----------------------------
+DROP TABLE IF EXISTS `mail_sensitive_words`;
+CREATE TABLE `mail_sensitive_words` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `word` varchar(100) NOT NULL COMMENT '敏感词',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `word` (`word`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='意见信箱敏感词';
+
+-- ----------------------------
+-- Records of mail_sensitive_words
+-- ----------------------------
+INSERT INTO `mail_sensitive_words` (`word`) VALUES
+('暴力'),
+('色情'),
+('赌博'),
+('毒品'),
+('反动'),
+('邪教'),
+('诈骗'),
+('贪污'),
+('腐败'),
+('上访');
+
 SET FOREIGN_KEY_CHECKS = 1;

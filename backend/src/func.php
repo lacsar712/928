@@ -75,3 +75,31 @@ function check_login() {
         exit;
     }
 }
+
+// 获取所有敏感词
+function get_sensitive_words() {
+    global $conn;
+    $words = [];
+    $sql = "SELECT word FROM mail_sensitive_words";
+    $result = mysqli_query($conn, $sql);
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $words[] = $row['word'];
+        }
+    }
+    return $words;
+}
+
+// 敏感词过滤 - 替换为 *
+function filter_sensitive_words($text) {
+    $words = get_sensitive_words();
+    if (empty($words)) {
+        return $text;
+    }
+    foreach ($words as $word) {
+        $len = mb_strlen($word, 'UTF-8');
+        $replace = str_repeat('*', $len);
+        $text = str_ireplace($word, $replace, $text);
+    }
+    return $text;
+}
