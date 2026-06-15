@@ -390,6 +390,88 @@ INSERT INTO `department_budget` (`year`, `department`, `budget_income`, `budget_
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ----------------------------
+-- Table structure for supply_warehouse
+-- ----------------------------
+DROP TABLE IF EXISTS `supply_warehouse`;
+CREATE TABLE `supply_warehouse` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL COMMENT '仓库名称',
+  `address` varchar(255) DEFAULT NULL COMMENT '仓库地址',
+  `manager` varchar(50) DEFAULT NULL COMMENT '负责人',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物资仓库';
+
+INSERT INTO `supply_warehouse` (`name`, `address`, `manager`) VALUES
+('中心仓库', '市政府大院东楼B1层', '王建国'),
+('东区分库', '东区应急物资储备站', '李文涛'),
+('西区分库', '西区民政物资仓库', '张秀英'),
+('开发区临时仓', '开发区物流园A3栋', '赵明辉');
+
+-- ----------------------------
+-- Table structure for supply_inventory
+-- ----------------------------
+DROP TABLE IF EXISTS `supply_inventory`;
+CREATE TABLE `supply_inventory` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL COMMENT '物资名称',
+  `category` varchar(50) DEFAULT NULL COMMENT '分类',
+  `unit` varchar(20) NOT NULL DEFAULT '件' COMMENT '单位',
+  `quantity` int(11) NOT NULL DEFAULT 0 COMMENT '库存数量',
+  `safety_stock` int(11) NOT NULL DEFAULT 0 COMMENT '安全库存阈值',
+  `warehouse_id` int(11) NOT NULL COMMENT '存放仓库ID',
+  `expiry_date` date DEFAULT NULL COMMENT '保质期/到期日',
+  `entry_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '入库时间',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `warehouse_id` (`warehouse_id`),
+  KEY `category` (`category`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应急物资库存台账';
+
+INSERT INTO `supply_inventory` (`name`, `category`, `unit`, `quantity`, `safety_stock`, `warehouse_id`, `expiry_date`, `entry_time`) VALUES
+('帐篷(4人)', '住宿保障', '顶', 120, 50, 1, '2028-06-30', '2025-03-15 09:00:00'),
+('帐篷(4人)', '住宿保障', '顶', 80, 50, 2, '2028-06-30', '2025-04-10 14:30:00'),
+('棉被', '住宿保障', '床', 300, 200, 1, '2027-12-31', '2025-02-20 10:00:00'),
+('棉被', '住宿保障', '床', 150, 200, 3, '2027-12-31', '2025-05-01 08:00:00'),
+('折叠床', '住宿保障', '张', 40, 100, 1, NULL, '2025-01-10 11:00:00'),
+('矿泉水', '生活保障', '箱', 500, 300, 1, '2026-12-31', '2025-06-01 07:00:00'),
+('矿泉水', '生活保障', '箱', 200, 300, 4, '2026-12-31', '2025-06-05 09:00:00'),
+('方便面', '生活保障', '箱', 800, 500, 1, '2026-09-30', '2025-05-20 08:00:00'),
+('方便面', '生活保障', '箱', 250, 500, 2, '2026-09-30', '2025-05-22 10:00:00'),
+('急救包', '医疗救护', '个', 60, 100, 1, '2027-06-30', '2025-04-01 09:30:00'),
+('急救包', '医疗救护', '个', 30, 100, 3, '2027-06-30', '2025-04-05 14:00:00'),
+('发电机(5kW)', '电力保障', '台', 15, 10, 1, NULL, '2025-01-15 10:00:00'),
+('发电机(5kW)', '电力保障', '台', 8, 10, 2, NULL, '2025-02-10 11:00:00'),
+('手电筒', '电力保障', '把', 200, 100, 1, NULL, '2025-03-01 09:00:00'),
+('沙袋', '防汛物资', '个', 5000, 3000, 1, NULL, '2025-04-10 07:00:00'),
+('沙袋', '防汛物资', '个', 1000, 3000, 4, NULL, '2025-04-12 08:00:00'),
+('抽水泵', '防汛物资', '台', 20, 15, 1, NULL, '2025-03-20 10:00:00'),
+('救生衣', '防汛物资', '件', 100, 80, 1, NULL, '2025-02-28 09:00:00'),
+('救生衣', '防汛物资', '件', 30, 80, 3, NULL, '2025-03-05 11:00:00'),
+('灭火器(干粉)', '消防物资', '具', 80, 50, 1, '2027-01-31', '2025-05-10 08:00:00');
+
+-- ----------------------------
+-- Table structure for supply_stock_log
+-- ----------------------------
+DROP TABLE IF EXISTS `supply_stock_log`;
+CREATE TABLE `supply_stock_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `inventory_id` int(11) NOT NULL COMMENT '物资台账ID',
+  `type` varchar(10) NOT NULL COMMENT '操作类型：in入库/out出库',
+  `quantity` int(11) NOT NULL COMMENT '操作数量',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `operator` varchar(50) DEFAULT NULL COMMENT '操作人',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `inventory_id` (`inventory_id`),
+  KEY `type` (`type`),
+  KEY `create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物资出入库记录';
+
+-- ----------------------------
 -- Table structure for recruit_positions
 -- ----------------------------
 DROP TABLE IF EXISTS `recruit_positions`;

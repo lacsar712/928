@@ -78,6 +78,9 @@ $real_url = isset($config['real_url']) ? $config['real_url'] : '';
                     <a href="emergency.php" class="list-group-item list-group-item-action">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i>应急事件
                     </a>
+                    <a href="supply.php" class="list-group-item list-group-item-action">
+                        <i class="bi bi-box-seam me-2"></i>物资台账
+                    </a>
                     <a href="net_tool.php" class="list-group-item list-group-item-action">
                         <i class="bi bi-broadcast me-2"></i>网络检测工具
                     </a>

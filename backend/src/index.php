@@ -47,6 +47,11 @@ $result = mysqli_query($conn, $sql);
                     <li class="nav-item"><a class="nav-link" href="budget.php">预决算公开</a></li>
                     <li class="nav-item"><a class="nav-link" href="recruit.php">公开招聘</a></li>
                     <li class="nav-item">
+                        <a class="nav-link bg-info rounded px-3 ms-2" href="supply_query.php">
+                            <i class="bi bi-box-seam me-1"></i><strong>物资查询</strong>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link bg-danger rounded px-3 ms-2" href="emergency_report.php">
                             <i class="bi bi-exclamation-triangle-fill me-1"></i><strong>应急上报</strong>
                         </a>
@@ -161,6 +166,24 @@ $result = mysqli_query($conn, $sql);
  <!-- Sidebar -->
             <div class="col-md-4">
                 <!-- 应急上报入口 -->
+                <div class="card border-0 shadow-sm mb-4 bg-gradient-to-r from-danger to-danger">
+                    <div class="card-body p-4 text-white" style="background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                <i class="bi bi-box-seam display-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0 fw-bold">应急物资查询</h5>
+                                <small class="opacity-75">库存透明 · 便民查询</small>
+                            </div>
+                        </div>
+                        <p class="mb-3 small opacity-90">查询应急物资库存总量及各仓库分布情况，信息实时更新。</p>
+                        <a href="supply_query.php" class="btn btn-light fw-bold w-100" style="color: #17a2b8;">
+                            <i class="bi bi-search me-2"></i>立即查询
+                        </a>
+                    </div>
+                </div>
+
                 <div class="card border-0 shadow-sm mb-4 bg-gradient-to-r from-danger to-danger">
                     <div class="card-body p-4 text-white" style="background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%);">
                         <div class="d-flex align-items-center mb-3">

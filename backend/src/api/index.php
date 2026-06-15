@@ -25,5 +25,10 @@ if (count($parts) >= 2 && $parts[0] === 'weather') {
     }
 }
 
+if (count($parts) >= 1 && $parts[0] === 'supply') {
+    require_once __DIR__ . '/supply.php';
+    exit;
+}
+
 http_response_code(404);
 echo json_encode(['code' => 404, 'msg' => '接口不存在']);
