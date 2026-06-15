@@ -142,4 +142,39 @@ CREATE TABLE `opinion_data` (
   KEY `crawl_time` (`crawl_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='舆情监测数据';
 
+-- ----------------------------
+-- Table structure for weather_cache
+-- ----------------------------
+DROP TABLE IF EXISTS `weather_cache`;
+CREATE TABLE `weather_cache` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cache_key` varchar(100) NOT NULL COMMENT '缓存键：today/forecast/aqi',
+  `cache_data` mediumtext NOT NULL COMMENT 'JSON 缓存数据',
+  `seed` int(11) NOT NULL DEFAULT 0 COMMENT '随机种子，5 分钟内固定',
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `cache_key` (`cache_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='气象数据缓存';
+
+-- ----------------------------
+-- Table structure for weather_config
+-- ----------------------------
+DROP TABLE IF EXISTS `weather_config`;
+CREATE TABLE `weather_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `config_key` varchar(100) NOT NULL COMMENT '配置键',
+  `config_value` varchar(500) NOT NULL COMMENT '配置值',
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `config_key` (`config_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='气象数据源配置';
+
+-- ----------------------------
+-- Records of weather_config
+-- ----------------------------
+INSERT INTO `weather_config` (`config_key`, `config_value`) VALUES
+('data_source', 'mock'),
+('mock_url', ''),
+('real_url', '');
+
 SET FOREIGN_KEY_CHECKS = 1;

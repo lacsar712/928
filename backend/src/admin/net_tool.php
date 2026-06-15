@@ -65,6 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <a href="opinion_dashboard.php" class="list-group-item list-group-item-action">
                         <i class="bi bi-radar me-2"></i>舆情监测看板
                     </a>
+                    <a href="weather_config.php" class="list-group-item list-group-item-action">
+                        <i class="bi bi-cloud-sun me-2"></i>气象数据源
+                    </a>
                 </div>
             </div>
 

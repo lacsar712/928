@@ -190,6 +190,62 @@ $result = mysqli_query($conn, $sql);
         </div>
     </div>
 
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0 border-start border-4 border-info ps-3 text-gov-blue fw-bold">
+                <i class="bi bi-cloud-sun me-2"></i>民生气象与空气质量
+            </h5>
+            <a href="weather.php" class="btn btn-sm btn-outline-primary">查看详情 <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-3 h-100" style="background:linear-gradient(135deg,#1e3c72 0%,#2a5298 50%,#4a90d9 100%);color:#fff;">
+                    <div class="card-body p-4" id="homeWeatherCard">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <p class="mb-0 opacity-75 small" id="homeWCity">XX市</p>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="display-4 fw-bold" id="homeWTemp">--°</span>
+                                    <i class="bi bi-cloud-sun display-4 opacity-75" id="homeWIcon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-2 small opacity-90" id="homeWDesc">--</p>
+                        <div class="d-flex gap-3 mb-2 small">
+                            <span><i class="bi bi-droplet-fill me-1"></i><span id="homeWHum">--%</span></span>
+                            <span><i class="bi bi-wind me-1"></i><span id="homeWWind">--</span></span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 p-2 rounded" style="background:rgba(255,255,255,0.15);">
+                            <span class="fw-bold">AQI</span>
+                            <span class="aqi-badge" id="homeWAqi" style="background:#FFFF00;color:#000;">-- --</span>
+                        </div>
+                        <p class="mt-2 mb-0 small opacity-75" id="homeWAdvice"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-3 h-100">
+                    <div class="card-header bg-white border-bottom py-2">
+                        <h6 class="mb-0 text-gov-blue fw-bold"><i class="bi bi-graph-up me-1"></i>7天温度预报</h6>
+                    </div>
+                    <div class="card-body p-3">
+                        <div style="height:220px;"><canvas id="homeForecastChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-3 h-100">
+                    <div class="card-header bg-white border-bottom py-2">
+                        <h6 class="mb-0 text-gov-blue fw-bold"><i class="bi bi-bar-chart me-1"></i>一周 AQI 预报</h6>
+                    </div>
+                    <div class="card-body p-3">
+                        <div style="height:220px;"><canvas id="homeAqiChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-dark text-white-50 py-4 mt-5">
         <div class="container text-center">
@@ -201,6 +257,7 @@ $result = mysqli_query($conn, $sql);
     <!-- Feature Not Available Modal -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
         document.querySelectorAll('.feature-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -229,6 +286,58 @@ $result = mysqli_query($conn, $sql);
                     icon: 'info',
                     confirmButtonText: '关闭'
                 });
+            });
+        });
+
+        function getAqiColor(aqi) {
+            if (aqi <= 50) return '#00e400';
+            if (aqi <= 100) return '#FFFF00';
+            if (aqi <= 150) return '#ff7e00';
+            if (aqi <= 200) return '#ff0000';
+            if (aqi <= 300) return '#99004c';
+            return '#7e0023';
+        }
+        function getAqiTextColor(aqi) { return aqi <= 100 ? '#000' : '#fff'; }
+
+        Promise.all([
+            fetch('api/weather/today').then(r => r.json()),
+            fetch('api/weather/forecast').then(r => r.json()),
+            fetch('api/weather/aqi').then(r => r.json())
+        ]).then(([today, forecast, aqi]) => {
+            const d = today.data;
+            document.getElementById('homeWCity').textContent = d.city || 'XX市';
+            document.getElementById('homeWTemp').textContent = d.temp + '°';
+            document.getElementById('homeWIcon').className = 'bi ' + (d.icon || 'bi-cloud-sun') + ' display-4 opacity-75';
+            document.getElementById('homeWDesc').textContent = d.temp_high + '°/' + d.temp_low + '° ' + d.weather;
+            document.getElementById('homeWHum').textContent = d.humidity + '%';
+            document.getElementById('homeWWind').textContent = d.wind_direction + ' ' + d.wind_scale;
+            const badge = document.getElementById('homeWAqi');
+            badge.textContent = d.aqi + ' ' + d.aqi_level;
+            badge.style.background = d.aqi_color;
+            badge.style.color = getAqiTextColor(d.aqi);
+            document.getElementById('homeWAdvice').textContent = d.aqi_advice;
+
+            const fc = forecast.data;
+            new Chart(document.getElementById('homeForecastChart'), {
+                type: 'line',
+                data: {
+                    labels: fc.map(x => x.date.substring(5)),
+                    datasets: [
+                        { label: '最高温', data: fc.map(x => x.temp_high), borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.1)', fill: false, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#ff6b6b' },
+                        { label: '最低温', data: fc.map(x => x.temp_low), borderColor: '#4dabf7', backgroundColor: 'rgba(77,171,247,0.1)', fill: false, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#4dabf7' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } } }, scales: { y: { grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false } } } }
+            });
+
+            const wk = aqi.data.weekly;
+            new Chart(document.getElementById('homeAqiChart'), {
+                type: 'bar',
+                data: {
+                    labels: wk.map(x => x.date.substring(5)),
+                    datasets: [{ label: 'AQI', data: wk.map(x => x.aqi), backgroundColor: wk.map(x => getAqiColor(x.aqi)), borderRadius: 6, maxBarThickness: 40 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 0, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false } } } }
             });
         });
     </script>

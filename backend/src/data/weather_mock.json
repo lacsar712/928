@@ -1,0 +1,47 @@
+{
+    "today": {
+        "city": "XX市",
+        "date": "",
+        "weather": "多云",
+        "icon": "bi-cloud-sun",
+        "temp": 26,
+        "temp_high": 31,
+        "temp_low": 21,
+        "humidity": 65,
+        "wind_direction": "东南风",
+        "wind_scale": "3级",
+        "wind_speed": 15,
+        "aqi": 78,
+        "aqi_level": "良",
+        "aqi_color": "#FFFF00",
+        "aqi_advice": "空气质量可接受，但某些污染物可能对极少数异常敏感人群健康有较弱影响"
+    },
+    "forecast": [
+        {"date": "", "day_weather": "多云", "day_icon": "bi-cloud-sun", "night_weather": "晴", "night_icon": "bi-moon", "temp_high": 31, "temp_low": 21},
+        {"date": "", "day_weather": "晴", "day_icon": "bi-sun", "night_weather": "晴", "night_icon": "bi-moon", "temp_high": 33, "temp_low": 22},
+        {"date": "", "day_weather": "晴", "day_icon": "bi-sun", "night_weather": "多云", "night_icon": "bi-cloud-moon", "temp_high": 34, "temp_low": 23},
+        {"date": "", "day_weather": "阵雨", "day_icon": "bi-cloud-rain", "night_weather": "中雨", "night_icon": "bi-cloud-rain-heavy", "temp_high": 28, "temp_low": 20},
+        {"date": "", "day_weather": "中雨", "day_icon": "bi-cloud-rain-heavy", "night_weather": "小雨", "night_icon": "bi-cloud-drizzle", "temp_high": 25, "temp_low": 19},
+        {"date": "", "day_weather": "多云", "day_icon": "bi-cloud-sun", "night_weather": "多云", "night_icon": "bi-cloud-moon", "temp_high": 29, "temp_low": 20},
+        {"date": "", "day_weather": "晴", "day_icon": "bi-sun", "night_weather": "晴", "night_icon": "bi-moon", "temp_high": 32, "temp_low": 22}
+    ],
+    "aqi_hourly": [
+        {"hour": "00:00", "aqi": 52}, {"hour": "01:00", "aqi": 48}, {"hour": "02:00", "aqi": 45},
+        {"hour": "03:00", "aqi": 43}, {"hour": "04:00", "aqi": 41}, {"hour": "05:00", "aqi": 40},
+        {"hour": "06:00", "aqi": 44}, {"hour": "07:00", "aqi": 50}, {"hour": "08:00", "aqi": 58},
+        {"hour": "09:00", "aqi": 65}, {"hour": "10:00", "aqi": 72}, {"hour": "11:00", "aqi": 78},
+        {"hour": "12:00", "aqi": 82}, {"hour": "13:00", "aqi": 85}, {"hour": "14:00", "aqi": 88},
+        {"hour": "15:00", "aqi": 86}, {"hour": "16:00", "aqi": 82}, {"hour": "17:00", "aqi": 78},
+        {"hour": "18:00", "aqi": 74}, {"hour": "19:00", "aqi": 68}, {"hour": "20:00", "aqi": 62},
+        {"hour": "21:00", "aqi": 58}, {"hour": "22:00", "aqi": 55}, {"hour": "23:00", "aqi": 52}
+    ],
+    "aqi_weekly": [
+        {"date": "", "aqi": 78},
+        {"date": "", "aqi": 65},
+        {"date": "", "aqi": 92},
+        {"date": "", "aqi": 105},
+        {"date": "", "aqi": 55},
+        {"date": "", "aqi": 48},
+        {"date": "", "aqi": 72}
+    ]
+}
