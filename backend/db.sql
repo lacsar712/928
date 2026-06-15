@@ -177,4 +177,52 @@ INSERT INTO `weather_config` (`config_key`, `config_value`) VALUES
 ('mock_url', ''),
 ('real_url', '');
 
+-- ----------------------------
+-- Table structure for meeting_rooms
+-- ----------------------------
+DROP TABLE IF EXISTS `meeting_rooms`;
+CREATE TABLE `meeting_rooms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL COMMENT '会议室名称',
+  `capacity` int(11) NOT NULL COMMENT '容纳人数',
+  `floor` varchar(50) NOT NULL COMMENT '所在楼层',
+  `equipment` text COMMENT '设备清单，逗号分隔',
+  `status` tinyint(1) DEFAULT 1 COMMENT '状态：1-启用 0-禁用',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='会议室基础信息';
+
+-- ----------------------------
+-- Records of meeting_rooms
+-- ----------------------------
+INSERT INTO `meeting_rooms` (`name`, `capacity`, `floor`, `equipment`, `status`) VALUES
+('第一会议室', 20, '3楼', '投影仪,白板,视频会议系统,空调', 1),
+('第二会议室', 50, '5楼', '投影仪,白板,音响系统,空调,视频会议系统', 1),
+('小会议室A', 8, '2楼', '白板,电视屏幕,空调', 1),
+('多功能厅', 100, '1楼', '投影仪,专业音响,舞台灯光,空调,视频会议系统', 1),
+('洽谈室', 6, '3楼', '白板,电视屏幕,空调', 1);
+
+-- ----------------------------
+-- Table structure for meeting_bookings
+-- ----------------------------
+DROP TABLE IF EXISTS `meeting_bookings`;
+CREATE TABLE `meeting_bookings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `room_id` int(11) NOT NULL COMMENT '会议室ID',
+  `subject` varchar(200) NOT NULL COMMENT '会议主题',
+  `attendees` int(11) NOT NULL COMMENT '参会人数',
+  `start_time` datetime NOT NULL COMMENT '开始时间',
+  `end_time` datetime NOT NULL COMMENT '结束时间',
+  `booker` varchar(50) NOT NULL COMMENT '预订人',
+  `status` tinyint(1) DEFAULT 1 COMMENT '状态：1-已预约 0-已取消',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `room_id` (`room_id`),
+  KEY `start_time` (`start_time`),
+  KEY `end_time` (`end_time`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='会议室预约记录';
+
 SET FOREIGN_KEY_CHECKS = 1;

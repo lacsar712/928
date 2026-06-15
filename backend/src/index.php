@@ -48,6 +48,11 @@ $result = mysqli_query($conn, $sql);
                             <i class="bi bi-exclamation-triangle-fill me-1"></i><strong>应急上报</strong>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link bg-warning text-dark rounded px-3 ms-2 fw-bold" href="booking.php">
+                            <i class="bi bi-calendar-check me-1"></i><strong>会议室预约</strong>
+                        </a>
+                    </li>
                     <li class="nav-item"><a class="nav-link" href="admin/login.php">管理登录</a></li>
                 </ul>
             </div>
@@ -171,6 +176,25 @@ $result = mysqli_query($conn, $sql);
                     </div>
                 </div>
 
+                <!-- 会议室预约入口 -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4 text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                <i class="bi bi-calendar-check display-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0 fw-bold">会议室预约系统</h5>
+                                <small class="opacity-75">高效管理 · 便捷预约</small>
+                            </div>
+                        </div>
+                        <p class="mb-3 small opacity-90">在线预约会议室，查看实时占用情况，支持按周日历视图，便捷高效。</p>
+                        <a href="booking.php" class="btn btn-light fw-bold w-100" style="color: #667eea;">
+                            <i class="bi bi-calendar-plus me-2"></i>立即预约
+                        </a>
+                    </div>
+                </div>
+
                 <!-- 便民服务 -->
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-gov-blue text-white py-3">
@@ -178,6 +202,9 @@ $result = mysqli_query($conn, $sql);
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
+                            <a class="btn btn-outline-primary text-start feature-btn" href="booking.php">
+                                📅 会议室预约
+                            </a>
                             <button class="btn btn-outline-secondary text-start feature-btn" type="button">📝 在线办事申请</button>
                             <button class="btn btn-outline-secondary text-start feature-btn" type="button">🔍 办件进度查询</button>
                             <button class="btn btn-outline-secondary text-start feature-btn" type="button">📞 12345 热线</button>
