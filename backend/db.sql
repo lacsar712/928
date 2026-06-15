@@ -278,4 +278,49 @@ INSERT INTO `mail_sensitive_words` (`word`) VALUES
 ('腐败'),
 ('上访');
 
+-- ----------------------------
+-- Table structure for leaders
+-- ----------------------------
+DROP TABLE IF EXISTS `leaders`;
+CREATE TABLE `leaders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL COMMENT '姓名',
+  `position` varchar(100) NOT NULL COMMENT '职务',
+  `department` varchar(20) NOT NULL COMMENT '所属部门：市委/市政府/人大/政协',
+  `avatar` varchar(255) DEFAULT NULL COMMENT '头像路径',
+  `responsibility` varchar(500) DEFAULT NULL COMMENT '分管领域',
+  `bio` text COMMENT '简介',
+  `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
+  `sort_order` int(11) DEFAULT 0 COMMENT '排序权重',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `department` (`department`),
+  KEY `sort_order` (`sort_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='领导干部信息公示';
+
+-- ----------------------------
+-- Records of leaders
+-- ----------------------------
+INSERT INTO `leaders` (`name`, `position`, `department`, `avatar`, `responsibility`, `bio`, `email`, `sort_order`) VALUES
+('张明', '市委书记', '市委', NULL, '主持市委全面工作，分管党的建设、干部人事工作', '男，汉族，1968年5月生，研究生学历，中共党员，现任XX市委书记。', 'zhangming@govcore.cn', 1),
+('李军', '市委副书记', '市委', NULL, '协助书记处理市委日常工作，分管政法、信访维稳', '男，汉族，1972年8月生，大学学历，中共党员，现任XX市委副书记。', 'lijun@govcore.cn', 2),
+('王芳', '市委常委、组织部部长', '市委', NULL, '主持市委组织部工作，分管组织、人才、老干部工作', '女，汉族，1975年3月生，研究生学历，中共党员，现任XX市委常委、组织部部长。', 'wangfang@govcore.cn', 3),
+('赵强', '市委常委、宣传部部长', '市委', NULL, '主持市委宣传部工作，分管宣传思想、意识形态、文化建设', '男，汉族，1970年12月生，大学学历，中共党员，现任XX市委常委、宣传部部长。', 'zhaoqiang@govcore.cn', 4),
+('刘伟', '市委常委、纪委书记', '市委', NULL, '主持市纪委监委工作，分管纪检监察、党风廉政建设', '男，汉族，1973年6月生，研究生学历，中共党员，现任XX市委常委、纪委书记、监委主任。', 'liuwei@govcore.cn', 5),
+
+('陈红', '市长', '市政府', NULL, '主持市政府全面工作，分管财政、审计工作', '女，汉族，1969年10月生，研究生学历，中共党员，现任XX市委副书记、市长。', 'chenhong@govcore.cn', 1),
+('孙涛', '常务副市长', '市政府', NULL, '协助市长处理市政府日常工作，分管发改、统计、自然资源', '男，汉族，1971年4月生，大学学历，中共党员，现任XX市委常委、常务副市长。', 'suntao@govcore.cn', 2),
+('周明', '副市长', '市政府', NULL, '分管工业经济、科技、商务、市场监管', '男，汉族，1974年9月生，研究生学历，中共党员，现任XX市人民政府副市长。', 'zhouming@govcore.cn', 3),
+('吴丽', '副市长', '市政府', NULL, '分管教育、卫生健康、文化旅游、体育', '女，汉族，1976年2月生，大学学历，中共党员，现任XX市人民政府副市长。', 'wuli@govcore.cn', 4),
+('郑华', '副市长、公安局局长', '市政府', NULL, '主持市公安局工作，分管公安、司法、应急管理', '男，汉族，1968年11月生，研究生学历，中共党员，现任XX市人民政府副市长、市公安局局长。', 'zhenghua@govcore.cn', 5),
+
+('黄磊', '市人大常委会主任', '人大', NULL, '主持市人大常委会全面工作，分管办公室', '男，汉族，1965年7月生，研究生学历，中共党员，现任XX市人大常委会主任、党组书记。', 'huanglei@govcore.cn', 1),
+('徐峰', '市人大常委会副主任', '人大', NULL, '分管财政经济委员会、预算工作委员会', '男，汉族，1967年1月生，大学学历，中共党员，现任XX市人大常委会副主任。', 'xufeng@govcore.cn', 2),
+('林霞', '市人大常委会副主任', '人大', NULL, '分管法制委员会、监察和司法委员会', '女，汉族，1970年5月生，研究生学历，中共党员，现任XX市人大常委会副主任。', 'linxia@govcore.cn', 3),
+
+('杨建华', '市政协主席', '政协', NULL, '主持市政协全面工作，分管办公室', '男，汉族，1964年8月生，大学学历，中共党员，现任XX市政协主席、党组书记。', 'yangjianhua@govcore.cn', 1),
+('范晓燕', '市政协副主席', '政协', NULL, '分管提案委员会、教科文卫体委员会', '女，汉族，1969年3月生，研究生学历，民盟盟员，现任XX市政协副主席。', 'fanxiaoyan@govcore.cn', 2),
+('马建国', '市政协副主席', '政协', NULL, '分管经济委员会、农业和农村委员会', '男，汉族，1966年12月生，大学学历，中共党员，现任XX市政协副主席。', 'majianguo@govcore.cn', 3);
+
 SET FOREIGN_KEY_CHECKS = 1;
