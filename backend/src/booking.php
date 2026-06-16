@@ -1,7 +1,12 @@
 <?php
 require_once 'func.php';
 
-$logged_in = isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true;
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    header("Location: admin/login.php");
+    exit;
+}
+
+$logged_in = true;
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -60,18 +65,13 @@ $logged_in = isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in']
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.php"><i class="bi bi-house me-1"></i>返回首页</a></li>
                     <li class="nav-item"><a class="nav-link" href="mail.php">意见信箱</a></li>
-                    <li class="nav-item"><a class="nav-link" href="mayor_mailbox.php">市长信箱</a></li>
                     <li class="nav-item"><a class="nav-link" href="budget.php">预决算公开</a></li>
-                    <?php if ($logged_in): ?>
-                        <li class="nav-item">
-                            <a class="nav-link bg-light text-primary rounded px-3 ms-2 fw-bold" href="admin/meeting_rooms.php">
-                                <i class="bi bi-gear me-1"></i>会议室管理
-                            </a>
-                        </li>
-                        <li class="nav-item"><a class="nav-link" href="admin/logout.php"><i class="bi bi-box-arrow-right me-1"></i>退出</a></li>
-                    <?php else: ?>
-                        <li class="nav-item"><a class="nav-link bg-white text-primary rounded px-3 ms-2 fw-bold" href="admin/login.php"><i class="bi bi-box-arrow-in-right me-1"></i>管理员登录</a></li>
-                    <?php endif; ?>
+                    <li class="nav-item">
+                        <a class="nav-link bg-light text-primary rounded px-3 ms-2 fw-bold" href="admin/meeting_rooms.php">
+                            <i class="bi bi-gear me-1"></i>会议室管理
+                        </a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="admin/logout.php"><i class="bi bi-box-arrow-right me-1"></i>退出</a></li>
                 </ul>
             </div>
         </div>
@@ -184,11 +184,9 @@ $logged_in = isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in']
                 </div>
                 <div class="modal-footer border-top-0">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">关闭</button>
-                    <?php if ($logged_in): ?>
-                        <button type="button" class="btn btn-danger px-4" id="cancelBookingBtn">
-                            <i class="bi bi-x-lg me-2"></i>取消预约
-                        </button>
-                    <?php endif; ?>
+                    <button type="button" class="btn btn-danger px-4" id="cancelBookingBtn">
+                        <i class="bi bi-x-lg me-2"></i>取消预约
+                    </button>
                 </div>
             </div>
         </div>

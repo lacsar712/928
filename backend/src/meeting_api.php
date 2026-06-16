@@ -208,6 +208,8 @@ function handle_book($method, $conn) {
         json_response(405, '不支持的请求方法');
     }
 
+    check_login();
+
     $input = get_input();
     $room_id = intval($input['room_id'] ?? 0);
     $subject = mysqli_real_escape_string($conn, trim($input['subject'] ?? ''));
