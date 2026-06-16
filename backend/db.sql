@@ -523,3 +523,34 @@ CREATE TABLE `recruit_applications` (
   KEY `phone` (`phone`),
   KEY `create_time` (`create_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公开招聘报名记录';
+
+-- ----------------------------
+-- Table structure for mayor_mailbox
+-- ----------------------------
+DROP TABLE IF EXISTS `mayor_mailbox`;
+CREATE TABLE `mayor_mailbox` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `message_no` varchar(32) NOT NULL COMMENT '受理编号',
+  `name` varchar(50) NOT NULL COMMENT '姓名',
+  `id_card` varchar(20) NOT NULL COMMENT '身份证号',
+  `phone` varchar(20) NOT NULL COMMENT '手机号',
+  `title` varchar(255) NOT NULL COMMENT '留言标题',
+  `content` text NOT NULL COMMENT '留言内容',
+  `is_public` tinyint(1) DEFAULT 1 COMMENT '可见范围：0-仅本人可见 1-公开',
+  `audit_status` tinyint(1) DEFAULT 0 COMMENT '审核状态：0-待审核 1-已通过 2-已拒绝',
+  `reply_status` tinyint(1) DEFAULT 0 COMMENT '回复状态：0-未回复 1-已回复',
+  `reply_content` text COMMENT '官方回复内容',
+  `reply_time` datetime DEFAULT NULL COMMENT '回复时间',
+  `reply_admin` varchar(50) DEFAULT NULL COMMENT '回复管理员',
+  `reject_reason` varchar(500) DEFAULT NULL COMMENT '拒绝原因',
+  `ip_address` varchar(50) DEFAULT NULL COMMENT '提交IP',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `message_no` (`message_no`),
+  KEY `phone` (`phone`),
+  KEY `audit_status` (`audit_status`),
+  KEY `reply_status` (`reply_status`),
+  KEY `is_public` (`is_public`),
+  KEY `create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='市长信箱留言';

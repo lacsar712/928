@@ -43,6 +43,7 @@ check_login();
                     <a href="meeting_rooms.php" class="list-group-item list-group-item-action"><i class="bi bi-door-open me-2"></i>会议室管理</a>
                     <a href="budget.php" class="list-group-item list-group-item-action"><i class="bi bi-cash-stack me-2"></i>预决算管理</a>
                     <a href="mail.php" class="list-group-item list-group-item-action"><i class="bi bi-envelope-open me-2"></i>意见信箱</a>
+                    <a href="mayor_mailbox.php" class="list-group-item list-group-item-action"><i class="bi bi-buildings me-2"></i>市长信箱</a>
                     <a href="mail_keywords.php" class="list-group-item list-group-item-action"><i class="bi bi-shield-exclamation me-2"></i>敏感词管理</a>
                     <a href="opinion_dashboard.php" class="list-group-item list-group-item-action"><i class="bi bi-radar me-2"></i>舆情监测看板</a>
                     <a href="weather_config.php" class="list-group-item list-group-item-action"><i class="bi bi-cloud-sun me-2"></i>气象数据源</a>

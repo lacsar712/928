@@ -104,6 +104,9 @@ check_login();
                     <a href="mail.php" class="list-group-item list-group-item-action">
                         <i class="bi bi-envelope-open me-2"></i>意见信箱
                     </a>
+                    <a href="mayor_mailbox.php" class="list-group-item list-group-item-action">
+                        <i class="bi bi-buildings me-2"></i>市长信箱
+                    </a>
                     <a href="mail_keywords.php" class="list-group-item list-group-item-action">
                         <i class="bi bi-shield-exclamation me-2"></i>敏感词管理
                     </a>

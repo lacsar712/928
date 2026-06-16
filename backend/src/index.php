@@ -44,6 +44,7 @@ $result = mysqli_query($conn, $sql);
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link active" href="index.php">首页</a></li>
                     <li class="nav-item"><a class="nav-link" href="mail.php">意见信箱</a></li>
+                    <li class="nav-item"><a class="nav-link" href="mayor_mailbox.php">市长信箱</a></li>
                     <li class="nav-item"><a class="nav-link" href="budget.php">预决算公开</a></li>
                     <li class="nav-item"><a class="nav-link" href="recruit.php">公开招聘</a></li>
                     <li class="nav-item">
