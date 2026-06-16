@@ -330,7 +330,7 @@ check_login();
                     if (data.code === 200) {
                         renderEventList(data.data.list);
                         renderPagination(data.data);
-                        updateStats(data.data.list);
+                        updateStats(data.data.status_counts);
                         document.getElementById('totalCount').textContent = `共 ${data.data.total} 条`;
                     }
                 });
@@ -417,13 +417,11 @@ check_login();
             container.innerHTML = html;
         }
 
-        function updateStats(events) {
-            const stats = { 1: 0, 2: 0, 3: 0, 4: 0 };
-            events.forEach(e => stats[e.status]++);
-            document.getElementById('statPending').textContent = stats[1];
-            document.getElementById('statDispatched').textContent = stats[2];
-            document.getElementById('statResolved').textContent = stats[3];
-            document.getElementById('statArchived').textContent = stats[4];
+        function updateStats(statusCounts) {
+            document.getElementById('statPending').textContent = statusCounts[1] || 0;
+            document.getElementById('statDispatched').textContent = statusCounts[2] || 0;
+            document.getElementById('statResolved').textContent = statusCounts[3] || 0;
+            document.getElementById('statArchived').textContent = statusCounts[4] || 0;
         }
 
         function goToPage(page) {

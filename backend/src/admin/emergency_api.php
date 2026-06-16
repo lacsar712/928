@@ -48,6 +48,15 @@ function getList() {
         $total = intval($count_row['total']);
     }
 
+    $stats_sql = "SELECT status, COUNT(*) as cnt FROM emergency_events $where_sql GROUP BY status";
+    $stats_result = mysqli_query($conn, $stats_sql);
+    $status_counts = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+    if ($stats_result) {
+        while ($row = mysqli_fetch_assoc($stats_result)) {
+            $status_counts[intval($row['status'])] = intval($row['cnt']);
+        }
+    }
+
     $offset = ($page - 1) * $page_size;
     $sql = "SELECT * FROM emergency_events $where_sql ORDER BY create_time DESC LIMIT $offset, $page_size";
     $result = mysqli_query($conn, $sql);
@@ -72,7 +81,8 @@ function getList() {
             'total' => $total,
             'page' => $page,
             'page_size' => $page_size,
-            'total_pages' => ceil($total / $page_size)
+            'total_pages' => ceil($total / $page_size),
+            'status_counts' => $status_counts
         ]
     ]);
 }
