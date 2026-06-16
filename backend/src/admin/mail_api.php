@@ -174,10 +174,18 @@ function replyMessage() {
         return;
     }
 
-    $check_sql = "SELECT message_no FROM mail_messages WHERE id = $id";
+    $check_sql = "SELECT message_no, status FROM mail_messages WHERE id = $id";
     $check_result = mysqli_query($conn, $check_sql);
-    if (!$check_result || !mysqli_fetch_assoc($check_result)) {
+    if (!$check_result || !($check_row = mysqli_fetch_assoc($check_result))) {
         echo json_encode(['code' => 404, 'msg' => '记录不存在']);
+        return;
+    }
+
+    $current_status = intval($check_row['status']);
+    $final_status = $status !== null ? $status : $current_status;
+
+    if ($current_status === 2 && $final_status === 2) {
+        echo json_encode(['code' => 400, 'msg' => '已拒绝的留言无法直接保存回复。请先将留言退回待审或审核通过后再回复。']);
         return;
     }
 

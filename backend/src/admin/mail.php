@@ -489,10 +489,33 @@ check_login();
                             ` : ''}
                         `;
 
-                        document.getElementById('replyContent').value = item.reply_content || '';
-
                         const btnContainer = document.getElementById('actionButtons');
+                        const replySection = document.getElementById('replySection');
                         const status = item.status;
+
+                        if (status === 2) {
+                            replySection.innerHTML = `
+                                <div class="alert alert-warning border-0 bg-warning bg-opacity-10 text-warning-emphasis mb-0">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <i class="bi bi-exclamation-triangle-fill fs-4"></i>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">该留言已被拒绝</h6>
+                                            <p class="mb-0 small">
+                                                已拒绝状态下的留言<strong>不会在前台公开列表展示</strong>，市民也收不到回复。
+                                                如需回复，请先点击下方"退回待审"将留言恢复为待审状态，
+                                                审核通过后再进行回复。
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            replySection.innerHTML = `
+                                <label class="form-label fw-bold"><i class="bi bi-reply-fill me-1"></i>官方回复</label>
+                                <textarea class="form-control" id="replyContent" rows="4" placeholder="请输入官方回复内容..." style="resize: vertical;"></textarea>
+                            `;
+                            document.getElementById('replyContent').value = item.reply_content || '';
+                        }
 
                         let buttons = [];
                         buttons.push('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>');
@@ -506,7 +529,9 @@ check_login();
                             buttons.push(`<button type="button" class="btn btn-info text-white" onclick="auditAction(0)"><i class="bi bi-arrow-counterclockwise me-1"></i>退回待审</button>`);
                         }
                         
-                        buttons.push(`<button type="button" class="btn btn-primary" onclick="saveReply()"><i class="bi bi-send me-1"></i>保存回复${status === 0 ? '并通过' : ''}</button>`);
+                        if (status !== 2) {
+                            buttons.push(`<button type="button" class="btn btn-primary" onclick="saveReply()"><i class="bi bi-send me-1"></i>保存回复${status === 0 ? '并通过' : ''}</button>`);
+                        }
 
                         btnContainer.innerHTML = buttons.join('');
 
