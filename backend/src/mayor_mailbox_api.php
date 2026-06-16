@@ -330,6 +330,7 @@ function getDetail() {
                 $row['name'] = mb_substr($row['name'], 0, 1, 'UTF-8') . str_repeat('*', $name_len - 1);
             }
             unset($row['id_card']);
+            unset($row['phone']);
             unset($row['ip_address']);
             echo json_encode(['code' => 200, 'msg' => 'success', 'data' => $row]);
             return;

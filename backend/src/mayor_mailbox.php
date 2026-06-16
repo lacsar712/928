@@ -687,12 +687,6 @@ require_once 'func.php';
                                     <label class="form-label text-muted small mb-1">提问人</label>
                                     <p class="mb-0">${item.name}</p>
                                 </div>
-                                ${item.phone ? `
-                                <div class="col-md-4">
-                                    <label class="form-label text-muted small mb-1">联系电话</label>
-                                    <p class="mb-0 font-monospace">${item.phone}</p>
-                                </div>
-                                ` : ''}
                                 ${item.is_public !== undefined ? `
                                 <div class="col-md-4">
                                     <label class="form-label text-muted small mb-1">可见范围</label>
