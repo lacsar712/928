@@ -334,7 +334,7 @@ check_login();
                     if (data.code === 200) {
                         renderTable(data.data.list);
                         renderPagination(data.data);
-                        updateStats(data.data.list);
+                        updateStats(data.data.dept_stats);
                         document.getElementById('totalCount').textContent = `共 ${data.data.total} 条`;
                     }
                 });
@@ -382,13 +382,11 @@ check_login();
             container.innerHTML = html;
         }
 
-        function updateStats(list) {
-            const stats = { '市委': 0, '市政府': 0, '人大': 0, '政协': 0 };
-            list.forEach(l => { if (stats[l.department] !== undefined) stats[l.department]++; });
-            document.getElementById('statSw').textContent = stats['市委'];
-            document.getElementById('statGov').textContent = stats['市政府'];
-            document.getElementById('statRd').textContent = stats['人大'];
-            document.getElementById('statZx').textContent = stats['政协'];
+        function updateStats(deptStats) {
+            document.getElementById('statSw').textContent = deptStats['市委'] || 0;
+            document.getElementById('statGov').textContent = deptStats['市政府'] || 0;
+            document.getElementById('statRd').textContent = deptStats['人大'] || 0;
+            document.getElementById('statZx').textContent = deptStats['政协'] || 0;
         }
 
         function goToPage(p) { currentPage = p; loadLeaders(); }

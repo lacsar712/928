@@ -44,12 +44,22 @@ switch ($action) {
             $list[] = $row;
         }
 
+        $dept_stats_sql = "SELECT department, COUNT(*) as cnt FROM leaders GROUP BY department";
+        $dept_stats_res = mysqli_query($conn, $dept_stats_sql);
+        $dept_stats = ['市委' => 0, '市政府' => 0, '人大' => 0, '政协' => 0];
+        while ($ds = mysqli_fetch_assoc($dept_stats_res)) {
+            if (isset($dept_stats[$ds['department']])) {
+                $dept_stats[$ds['department']] = intval($ds['cnt']);
+            }
+        }
+
         json_response(200, 'Success', [
             'list' => $list,
             'total' => $total,
             'total_pages' => $total_pages,
             'page' => $page,
-            'page_size' => $page_size
+            'page_size' => $page_size,
+            'dept_stats' => $dept_stats
         ]);
         break;
 
