@@ -17,7 +17,7 @@ $parts = explode('/', $route);
 
 if (count($parts) >= 2 && $parts[0] === 'weather') {
     $action = $parts[1];
-    $allowed = ['today', 'forecast', 'aqi'];
+    $allowed = ['today', 'forecast', 'aqi', 'clear_cache'];
     if (in_array($action, $allowed)) {
         require_once __DIR__ . '/weather.php';
         handle_weather($action);

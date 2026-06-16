@@ -230,10 +230,22 @@ $real_url = isset($config['real_url']) ? $config['real_url'] : '';
                 cancelButtonText: '取消'
             }).then(function(result) {
                 if (result.isConfirmed) {
-                    fetch('../api/weather/today?_nocache=1').catch(function(){});
-                    fetch('../api/weather/forecast?_nocache=1').catch(function(){});
-                    fetch('../api/weather/aqi?_nocache=1').catch(function(){});
-                    Swal.fire('已清除!', '气象缓存已清除，下次请求将重新生成数据。', 'success');
+                    fetch('../api/weather/clear_cache', { method: 'POST' })
+                        .then(function(r) { return r.json(); })
+                        .then(function(resp) {
+                            if (resp.code === 200) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '已清除！',
+                                    html: '气象缓存已全部清空，共删除 <strong>' + (resp.deleted || 0) + '</strong> 条记录。<br><br>请刷新前台页面，即可看到重新生成的新数据。'
+                                });
+                            } else {
+                                Swal.fire('清除失败', resp.msg || '未知错误', 'error');
+                            }
+                        })
+                        .catch(function(err) {
+                            Swal.fire('清除失败', err.message, 'error');
+                        });
                 }
             });
         });

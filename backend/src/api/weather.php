@@ -137,7 +137,25 @@ function build_aqi($mock, $seed) {
     ];
 }
 
+function clear_weather_cache() {
+    global $conn;
+    $sql = "DELETE FROM weather_cache";
+    if (mysqli_query($conn, $sql)) {
+        $affected = mysqli_affected_rows($conn);
+        Logger::logAction('WeatherCache', "手动清除缓存，删除 {$affected} 条记录");
+        echo json_encode(['code' => 200, 'msg' => '气象缓存已清除', 'deleted' => $affected], JSON_UNESCAPED_UNICODE);
+    } else {
+        http_response_code(500);
+        echo json_encode(['code' => 500, 'msg' => '清除失败: ' . mysqli_error($conn)], JSON_UNESCAPED_UNICODE);
+    }
+}
+
 function handle_weather($action) {
+    if ($action === 'clear_cache') {
+        clear_weather_cache();
+        return;
+    }
+
     $config = get_weather_config();
     $data_source = isset($config['data_source']) ? $config['data_source'] : 'mock';
 
