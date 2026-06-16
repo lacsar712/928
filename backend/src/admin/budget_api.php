@@ -235,6 +235,125 @@ function deleteRecord() {
     }
 }
 
+function parseXlsx($filePath) {
+    if (!class_exists('ZipArchive')) {
+        return [];
+    }
+
+    $zip = new ZipArchive();
+    if ($zip->open($filePath) !== true) {
+        return [];
+    }
+
+    $ns = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+
+    $sharedStrings = [];
+    $xmlStrings = $zip->getFromName('xl/sharedStrings.xml');
+    if ($xmlStrings !== false) {
+        $xml = simplexml_load_string($xmlStrings);
+        if ($xml) {
+            $children = $xml->children($ns);
+            foreach ($children as $si) {
+                $siChildren = $si->children($ns);
+                if (isset($siChildren->t)) {
+                    $sharedStrings[] = (string)$siChildren->t;
+                } elseif (isset($siChildren->r)) {
+                    $text = '';
+                    foreach ($siChildren->r as $rt) {
+                        $rtChildren = $rt->children($ns);
+                        if (isset($rtChildren->t)) {
+                            $text .= (string)$rtChildren->t;
+                        }
+                    }
+                    $sharedStrings[] = $text;
+                } else {
+                    $sharedStrings[] = trim(strip_tags($si->asXML()));
+                }
+            }
+        }
+    }
+
+    $rows = [];
+    $sheetXml = $zip->getFromName('xl/worksheets/sheet1.xml');
+    if ($sheetXml === false) {
+        $zip->close();
+        return [];
+    }
+
+    $xml = simplexml_load_string($sheetXml);
+    if (!$xml) {
+        $zip->close();
+        return [];
+    }
+
+    $ws = $xml->children($ns);
+    if (!isset($ws->sheetData)) {
+        $zip->close();
+        return [];
+    }
+
+    $rowIndex = 0;
+    foreach ($ws->sheetData->row as $row) {
+        $rowIndex++;
+        if ($rowIndex == 1) {
+            continue;
+        }
+
+        $cells = [];
+        $maxCol = 0;
+        foreach ($row->c as $cell) {
+            $colLetter = preg_replace('/[0-9]/', '', (string)$cell['r']);
+            $colIndex = colLetterToIndex($colLetter);
+            $cellType = (string)$cell['t'];
+            $cellChildren = $cell->children($ns);
+            $value = '';
+
+            if ($cellType === 's' && isset($cellChildren->v)) {
+                $idx = intval((string)$cellChildren->v);
+                if (isset($sharedStrings[$idx])) {
+                    $value = $sharedStrings[$idx];
+                }
+            } elseif ($cellType === 'inlineStr' && isset($cellChildren->is)) {
+                $isChildren = $cellChildren->is->children($ns);
+                if (isset($isChildren->t)) {
+                    $value = (string)$isChildren->t;
+                } else {
+                    $value = trim(strip_tags($cellChildren->is->asXML()));
+                }
+            } elseif (isset($cellChildren->v)) {
+                $value = (string)$cellChildren->v;
+            }
+
+            $cells[$colIndex] = $value;
+            if ($colIndex > $maxCol) {
+                $maxCol = $colIndex;
+            }
+        }
+
+        $rowData = [];
+        for ($i = 0; $i <= $maxCol; $i++) {
+            $rowData[] = $cells[$i] ?? '';
+        }
+
+        if (count($rowData) >= 5 && !empty($rowData[0])) {
+            $rows[] = $rowData;
+        }
+    }
+
+    $zip->close();
+    return $rows;
+}
+
+function colLetterToIndex($letter) {
+    $letter = strtoupper($letter);
+    $len = strlen($letter);
+    $index = 0;
+    for ($i = 0; $i < $len; $i++) {
+        $index = $index * 26 + (ord($letter[$i]) - ord('A') + 1);
+    }
+    return $index - 1;
+}
+
 function importExcel() {
     global $conn;
 
@@ -278,8 +397,10 @@ function importExcel() {
             }
             fclose($handle);
         }
-    } else {
-        echo json_encode(['code' => 400, 'msg' => 'XLS/XLSX 格式请先转为 CSV 后上传']);
+    } elseif ($ext === 'xlsx') {
+        $rows = parseXlsx($file['tmp_name']);
+    } elseif ($ext === 'xls') {
+        echo json_encode(['code' => 400, 'msg' => '旧版 .xls 格式暂不支持，请另存为 .xlsx 或 CSV 格式后再上传']);
         return;
     }
 

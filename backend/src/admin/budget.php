@@ -185,11 +185,11 @@ check_login();
                                     </div>
                                     <div class="upload-zone" id="uploadZone" onclick="document.getElementById('importFile').click()">
                                         <i class="bi bi-cloud-arrow-up d-block mb-3"></i>
-                                        <p class="mb-1 fw-bold">点击或拖拽文件到此处</p>
-                                        <p class="text-muted small mb-0">支持 CSV 格式（部门名称,预算收入,预算支出,决算收入,决算支出）</p>
+                                        <p class="mb-1 fw-bold">点击或拖拽 Excel 文件到此处</p>
+                                        <p class="text-muted small mb-0">支持 .xlsx / .csv 格式（部门名称,预算收入,预算支出,决算收入,决算支出）</p>
                                         <p class="text-muted small mb-0" id="fileName"></p>
                                     </div>
-                                    <input type="file" id="importFile" accept=".csv" style="display: none;">
+                                    <input type="file" id="importFile" accept=".xlsx,.csv" style="display: none;">
                                     <button type="button" class="btn btn-success mt-3 px-4" onclick="doImport()">
                                         <i class="bi bi-upload me-1"></i>开始导入
                                     </button>
@@ -489,8 +489,19 @@ check_login();
             this.classList.remove('dragover');
             const files = e.dataTransfer.files;
             if (files.length > 0) {
-                document.getElementById('importFile').files = files;
-                document.getElementById('fileName').textContent = files[0].name;
+                const file = files[0];
+                const name = file.name.toLowerCase();
+                if (name.endsWith('.xlsx') || name.endsWith('.csv')) {
+                    document.getElementById('importFile').files = files;
+                    document.getElementById('fileName').textContent = file.name;
+                } else {
+                    Swal.fire({
+                        title: '文件格式不支持',
+                        text: '仅支持 .xlsx 和 .csv 格式的文件，请检查后重新上传',
+                        icon: 'warning',
+                        confirmButtonText: '知道了'
+                    });
+                }
             }
         });
 
