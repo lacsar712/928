@@ -72,7 +72,7 @@ function getList() {
 
     $where = ["`year` = $year"];
     if (!empty($keyword)) {
-        $keyword_safe = mysqli_real_escape_string($conn, $keyword);
+        $keyword_safe = mysqli_real_escape_string($conn, escape_like($keyword));
         $where[] = "department LIKE '%$keyword_safe%'";
     }
     $where_sql = ' WHERE ' . implode(' AND ', $where);

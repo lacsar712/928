@@ -53,7 +53,7 @@ function getAdminList() {
     }
 
     if (!empty($keyword)) {
-        $keyword_safe = mysqli_real_escape_string($conn, $keyword);
+        $keyword_safe = mysqli_real_escape_string($conn, escape_like($keyword));
         $where[] = "(message_no LIKE '%$keyword_safe%' OR name LIKE '%$keyword_safe%' OR phone LIKE '%$keyword_safe%' OR title LIKE '%$keyword_safe%' OR content LIKE '%$keyword_safe%')";
     }
 

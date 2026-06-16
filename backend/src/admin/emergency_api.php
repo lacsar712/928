@@ -35,7 +35,7 @@ function getList() {
         $where[] = "status = $status";
     }
     if (!empty($keyword)) {
-        $keyword_safe = mysqli_real_escape_string($conn, $keyword);
+        $keyword_safe = mysqli_real_escape_string($conn, escape_like($keyword));
         $where[] = "(event_no LIKE '%$keyword_safe%' OR location LIKE '%$keyword_safe%' OR description LIKE '%$keyword_safe%')";
     }
 

@@ -172,7 +172,7 @@ function getPublicList() {
     $where = ["audit_status = 1", "reply_status = 1", "is_public = 1"];
 
     if (!empty($keyword)) {
-        $keyword_safe = mysqli_real_escape_string($conn, $keyword);
+        $keyword_safe = mysqli_real_escape_string($conn, escape_like($keyword));
         $where[] = "(title LIKE '%$keyword_safe%' OR content LIKE '%$keyword_safe%' OR reply_content LIKE '%$keyword_safe%')";
     }
 

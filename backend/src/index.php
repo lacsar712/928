@@ -6,9 +6,8 @@ $search_sql = "";
 $mode = "latest";
 if (isset($_GET['keyword'])) {
     $keyword = $_GET['keyword'];
-    // [VULN] 直接拼接 SQL，无过滤
-    // Payload: ' UNION SELECT 1, user(), database(), 4 -- 
-    $sql = "SELECT * FROM news WHERE title LIKE '%$keyword%' ORDER BY publish_date DESC";
+    $keyword_safe = mysqli_real_escape_string($conn, escape_like($keyword));
+    $sql = "SELECT * FROM news WHERE title LIKE '%$keyword_safe%' ORDER BY publish_date DESC";
     $mode = "search";
     Logger::logAction('Search', "User searched for: $keyword");
 } else {

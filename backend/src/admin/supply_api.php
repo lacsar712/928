@@ -60,7 +60,7 @@ function supplyList() {
 
     $where = [];
     if (!empty($keyword)) {
-        $keyword_safe = mysqli_real_escape_string($conn, $keyword);
+        $keyword_safe = mysqli_real_escape_string($conn, escape_like($keyword));
         $where[] = "si.name LIKE '%$keyword_safe%'";
     }
     if (!empty($category)) {
@@ -403,7 +403,7 @@ function stockQuery() {
         return;
     }
 
-    $keyword_safe = mysqli_real_escape_string($conn, $keyword);
+    $keyword_safe = mysqli_real_escape_string($conn, escape_like($keyword));
 
     $sql = "SELECT si.name, si.category, si.unit, si.quantity, si.warehouse_id, sw.name as warehouse_name FROM supply_inventory si LEFT JOIN supply_warehouse sw ON si.warehouse_id = sw.id WHERE si.name LIKE '%$keyword_safe%'";
     $result = mysqli_query($conn, $sql);

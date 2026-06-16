@@ -46,7 +46,7 @@ function getKeywordList() {
         $where[] = "sentiment = $sentiment";
     }
     if (!empty($keyword)) {
-        $keyword_safe = mysqli_real_escape_string($conn, $keyword);
+        $keyword_safe = mysqli_real_escape_string($conn, escape_like($keyword));
         $where[] = "keyword LIKE '%$keyword_safe%'";
     }
 
@@ -214,7 +214,7 @@ function getOpinionList() {
         $where[] = "source_platform = '$source_safe'";
     }
     if (!empty($keyword)) {
-        $keyword_safe = mysqli_real_escape_string($conn, $keyword);
+        $keyword_safe = mysqli_real_escape_string($conn, escape_like($keyword));
         $where[] = "(title LIKE '%$keyword_safe%' OR content LIKE '%$keyword_safe%')";
     }
 

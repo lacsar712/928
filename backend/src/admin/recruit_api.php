@@ -43,7 +43,7 @@ function getList() {
         $where[] = "status = $status";
     }
     if (!empty($keyword)) {
-        $keyword_safe = mysqli_real_escape_string($conn, $keyword);
+        $keyword_safe = mysqli_real_escape_string($conn, escape_like($keyword));
         $where[] = "(title LIKE '%$keyword_safe%' OR department LIKE '%$keyword_safe%')";
     }
 

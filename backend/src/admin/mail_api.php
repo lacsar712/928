@@ -52,7 +52,7 @@ function getAdminList() {
         $where[] = "status = $status";
     }
     if (!empty($keyword)) {
-        $keyword_safe = mysqli_real_escape_string($conn, $keyword);
+        $keyword_safe = mysqli_real_escape_string($conn, escape_like($keyword));
         $where[] = "(message_no LIKE '%$keyword_safe%' OR name LIKE '%$keyword_safe%' OR email LIKE '%$keyword_safe%' OR subject LIKE '%$keyword_safe%')";
     }
 
@@ -222,7 +222,7 @@ function getSensitiveList() {
 
     $where = [];
     if (!empty($keyword)) {
-        $keyword_safe = mysqli_real_escape_string($conn, $keyword);
+        $keyword_safe = mysqli_real_escape_string($conn, escape_like($keyword));
         $where[] = "word LIKE '%$keyword_safe%'";
     }
 

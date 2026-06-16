@@ -27,7 +27,7 @@ switch ($action) {
             $where .= " AND department = '$dept'";
         }
         if ($keyword) {
-            $kw = mysqli_real_escape_string($conn, $keyword);
+            $kw = mysqli_real_escape_string($conn, escape_like($keyword));
             $where .= " AND (name LIKE '%$kw%' OR position LIKE '%$kw%' OR responsibility LIKE '%$kw%')";
         }
 

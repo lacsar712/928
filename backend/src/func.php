@@ -103,3 +103,11 @@ function filter_sensitive_words($text) {
     }
     return $text;
 }
+
+// 转义 SQL LIKE 通配符 % 和 _，使其作为字面量匹配
+function escape_like($str) {
+    $str = str_replace('\\', '\\\\', $str);
+    $str = str_replace('%', '\\%', $str);
+    $str = str_replace('_', '\\_', $str);
+    return $str;
+}
