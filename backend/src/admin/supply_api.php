@@ -10,6 +10,9 @@ switch ($action) {
     case 'supply_list':
         supplyList();
         break;
+    case 'supply_all':
+        supplyAll();
+        break;
     case 'supply_create':
         supplyCreate();
         break;
@@ -112,6 +115,27 @@ function supplyList() {
             'total_pages' => ceil($total / $page_size),
             'warning_count' => $warning_count
         ]
+    ]);
+}
+
+function supplyAll() {
+    global $conn;
+
+    $sql = "SELECT si.*, sw.name as warehouse_name FROM supply_inventory si LEFT JOIN supply_warehouse sw ON si.warehouse_id = sw.id ORDER BY si.name ASC, si.warehouse_id ASC";
+    $result = mysqli_query($conn, $sql);
+
+    $list = [];
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $row['is_warning'] = intval($row['quantity']) < intval($row['safety_stock']);
+            $list[] = $row;
+        }
+    }
+
+    echo json_encode([
+        'code' => 200,
+        'msg' => 'success',
+        'data' => ['list' => $list]
     ]);
 }
 

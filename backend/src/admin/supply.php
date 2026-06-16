@@ -364,6 +364,14 @@ check_login();
                         document.getElementById('statTotal').textContent = data.data.total;
                         document.getElementById('statWarning').textContent = data.data.warning_count;
                         updateCategories(data.data.list);
+                    }
+                });
+        }
+
+        function loadAllSupplies() {
+            fetch('supply_api.php?action=supply_all')
+                .then(r => r.json()).then(data => {
+                    if (data.code === 200) {
                         populateStockSelects(data.data.list);
                     }
                 });
@@ -518,6 +526,7 @@ check_login();
                     Swal.fire({ title: '成功', text: data.msg, icon: 'success', confirmButtonText: '确定' });
                     bootstrap.Modal.getInstance(document.getElementById('supplyModal')).hide();
                     loadSupplies();
+                    loadAllSupplies();
                 } else {
                     Swal.fire({ title: '失败', text: data.msg, icon: 'error', confirmButtonText: '确定' });
                 }
@@ -534,7 +543,7 @@ check_login();
                         method: 'POST', headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ id })
                     }).then(r => r.json()).then(data => {
-                        if (data.code === 200) { loadSupplies(); }
+                        if (data.code === 200) { loadSupplies(); loadAllSupplies(); }
                         else { Swal.fire({ title: '失败', text: data.msg, icon: 'error', confirmButtonText: '确定' }); }
                     });
                 }
@@ -559,6 +568,7 @@ check_login();
                     document.getElementById('stockInQty').value = 1;
                     document.getElementById('stockInRemark').value = '';
                     loadSupplies();
+                    loadAllSupplies();
                     loadStockLogs();
                 } else {
                     Swal.fire({ title: '失败', text: data.msg, icon: 'error', confirmButtonText: '确定' });
@@ -584,6 +594,7 @@ check_login();
                     document.getElementById('stockOutQty').value = 1;
                     document.getElementById('stockOutRemark').value = '';
                     loadSupplies();
+                    loadAllSupplies();
                     loadStockLogs();
                 } else {
                     Swal.fire({ title: '失败', text: data.msg, icon: 'error', confirmButtonText: '确定' });
@@ -721,8 +732,18 @@ check_login();
             if (e.key === 'Enter') { supplyPage = 1; loadSupplies(); }
         });
 
+        document.querySelectorAll('#mainTab a[data-bs-toggle="tab"]').forEach(tabEl => {
+            tabEl.addEventListener('shown.bs.tab', e => {
+                if (e.target.getAttribute('href') === '#tabStockOp') {
+                    loadAllSupplies();
+                    loadStockLogs();
+                }
+            });
+        });
+
         loadWarehouses();
         loadSupplies();
+        loadAllSupplies();
         loadStockLogs();
     </script>
 </body>
