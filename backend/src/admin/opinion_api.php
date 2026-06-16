@@ -261,6 +261,8 @@ function getStats() {
 
     $today_start = date('Y-m-d 00:00:00');
     $today_end = date('Y-m-d 23:59:59');
+    $yesterday_start = date('Y-m-d 00:00:00', strtotime('-1 day'));
+    $yesterday_end = date('Y-m-d 23:59:59', strtotime('-1 day'));
 
     $today_count_sql = "SELECT COUNT(*) as cnt FROM opinion_data WHERE crawl_time >= '$today_start' AND crawl_time <= '$today_end'";
     $today_result = mysqli_query($conn, $today_count_sql);
@@ -269,21 +271,35 @@ function getStats() {
         $today_count = intval($row['cnt']);
     }
 
-    $total_count_sql = "SELECT COUNT(*) as cnt FROM opinion_data WHERE crawl_time >= '$today_start' AND crawl_time <= '$today_end'";
-    $total_result = mysqli_query($conn, $total_count_sql);
-    $total_count = 0;
-    if ($row = mysqli_fetch_assoc($total_result)) {
-        $total_count = intval($row['cnt']);
+    $yesterday_count_sql = "SELECT COUNT(*) as cnt FROM opinion_data WHERE crawl_time >= '$yesterday_start' AND crawl_time <= '$yesterday_end'";
+    $yesterday_result = mysqli_query($conn, $yesterday_count_sql);
+    $yesterday_count = 0;
+    if ($row = mysqli_fetch_assoc($yesterday_result)) {
+        $yesterday_count = intval($row['cnt']);
     }
 
-    $negative_count_sql = "SELECT COUNT(*) as cnt FROM opinion_data WHERE crawl_time >= '$today_start' AND crawl_time <= '$today_end' AND sentiment = 3";
-    $negative_result = mysqli_query($conn, $negative_count_sql);
-    $negative_count = 0;
-    if ($row = mysqli_fetch_assoc($negative_result)) {
-        $negative_count = intval($row['cnt']);
+    $today_negative_sql = "SELECT COUNT(*) as cnt FROM opinion_data WHERE crawl_time >= '$today_start' AND crawl_time <= '$today_end' AND sentiment = 3";
+    $today_negative_result = mysqli_query($conn, $today_negative_sql);
+    $today_negative_count = 0;
+    if ($row = mysqli_fetch_assoc($today_negative_result)) {
+        $today_negative_count = intval($row['cnt']);
     }
+    $today_negative_ratio = $today_count > 0 ? round(($today_negative_count / $today_count) * 100, 1) : 0;
 
-    $negative_ratio = $total_count > 0 ? round(($negative_count / $total_count) * 100, 1) : 0;
+    $yesterday_negative_sql = "SELECT COUNT(*) as cnt FROM opinion_data WHERE crawl_time >= '$yesterday_start' AND crawl_time <= '$yesterday_end' AND sentiment = 3";
+    $yesterday_negative_result = mysqli_query($conn, $yesterday_negative_sql);
+    $yesterday_negative_count = 0;
+    if ($row = mysqli_fetch_assoc($yesterday_negative_result)) {
+        $yesterday_negative_count = intval($row['cnt']);
+    }
+    $yesterday_negative_ratio = $yesterday_count > 0 ? round(($yesterday_negative_count / $yesterday_count) * 100, 1) : 0;
+
+    $negative_ratio_diff = round($today_negative_ratio - $yesterday_negative_ratio, 1);
+
+    $today_count_diff = 0;
+    if ($yesterday_count > 0) {
+        $today_count_diff = round((($today_count - $yesterday_count) / $yesterday_count) * 100, 1);
+    }
 
     $matched_keywords_sql = "SELECT matched_keywords FROM opinion_data WHERE crawl_time >= '$today_start' AND crawl_time <= '$today_end' AND matched_keywords IS NOT NULL";
     $matched_result = mysqli_query($conn, $matched_keywords_sql);
@@ -293,6 +309,18 @@ function getStats() {
             $keywords = json_decode($row['matched_keywords'], true);
             if (is_array($keywords)) {
                 $matched_count += count($keywords);
+            }
+        }
+    }
+
+    $yesterday_matched_sql = "SELECT matched_keywords FROM opinion_data WHERE crawl_time >= '$yesterday_start' AND crawl_time <= '$yesterday_end' AND matched_keywords IS NOT NULL";
+    $yesterday_matched_result = mysqli_query($conn, $yesterday_matched_sql);
+    $yesterday_matched_count = 0;
+    if ($yesterday_matched_result) {
+        while ($row = mysqli_fetch_assoc($yesterday_matched_result)) {
+            $keywords = json_decode($row['matched_keywords'], true);
+            if (is_array($keywords)) {
+                $yesterday_matched_count += count($keywords);
             }
         }
     }
@@ -324,20 +352,32 @@ function getStats() {
         }
     }
 
+    $keyword_coverage_sql = "SELECT COUNT(DISTINCT keyword) as cnt FROM opinion_keywords";
+    $keyword_coverage_result = mysqli_query($conn, $keyword_coverage_sql);
+    $keyword_coverage = 0;
+    if ($row = mysqli_fetch_assoc($keyword_coverage_result)) {
+        $keyword_coverage = intval($row['cnt']);
+    }
+
     echo json_encode([
         'code' => 200,
         'msg' => 'success',
         'data' => [
             'today_count' => $today_count,
-            'negative_ratio' => $negative_ratio,
+            'today_count_diff' => $today_count_diff,
+            'negative_ratio' => $today_negative_ratio,
+            'negative_ratio_diff' => $negative_ratio_diff,
+            'yesterday_negative_ratio' => $yesterday_negative_ratio,
             'matched_keywords_count' => $matched_count,
+            'yesterday_matched_count' => $yesterday_matched_count,
+            'keyword_coverage' => $keyword_coverage,
             'sentiment' => $sentiment_data,
             'platforms' => $platform_data
         ]
     ]);
 }
 
-function generateOpinionData() {
+function generateSingleOpinion($crawl_time_offset_hours = 0) {
     global $conn;
 
     $platforms = ['微博', '微信公众号', '抖音', '快手', 'B站', '知乎', '小红书', '今日头条', '百度贴吧', '豆瓣'];
@@ -403,83 +443,111 @@ function generateOpinionData() {
         '小明同学', '老王说事', '城市之声', '民生观察员', '百姓代言人'
     ];
 
-    $keywords_sql = "SELECT * FROM opinion_keywords";
-    $keywords_result = mysqli_query($conn, $keywords_sql);
-    $all_keywords = [];
-    if ($keywords_result) {
-        while ($row = mysqli_fetch_assoc($keywords_result)) {
-            $all_keywords[] = $row;
+    static $all_keywords = null;
+    if ($all_keywords === null) {
+        $keywords_sql = "SELECT * FROM opinion_keywords";
+        $keywords_result = mysqli_query($conn, $keywords_sql);
+        $all_keywords = [];
+        if ($keywords_result) {
+            while ($row = mysqli_fetch_assoc($keywords_result)) {
+                $all_keywords[] = $row;
+            }
         }
     }
 
-    $count = rand(3, 8);
-    $inserted = 0;
+    $sentiment_rand = mt_rand(1, 100);
+    if ($sentiment_rand <= 30) {
+        $sentiment = 1;
+        $title_pool = $positive_titles;
+        $content_pool = $positive_contents;
+    } elseif ($sentiment_rand <= 70) {
+        $sentiment = 2;
+        $title_pool = $neutral_titles;
+        $content_pool = $neutral_contents;
+    } else {
+        $sentiment = 3;
+        $title_pool = $negative_titles;
+        $content_pool = $negative_contents;
+    }
 
-    for ($i = 0; $i < $count; $i++) {
-        $sentiment_rand = mt_rand(1, 100);
-        if ($sentiment_rand <= 30) {
-            $sentiment = 1;
-            $title_pool = $positive_titles;
-            $content_pool = $positive_contents;
-        } elseif ($sentiment_rand <= 70) {
-            $sentiment = 2;
-            $title_pool = $neutral_titles;
-            $content_pool = $neutral_contents;
-        } else {
-            $sentiment = 3;
-            $title_pool = $negative_titles;
-            $content_pool = $negative_contents;
+    $title = $title_pool[array_rand($title_pool)];
+    $content = $content_pool[array_rand($content_pool)];
+    $platform = $platforms[array_rand($platforms)];
+    $author = $authors[array_rand($authors)];
+
+    $matched = [];
+    foreach ($all_keywords as $kw) {
+        if (mb_strpos($title, $kw['keyword']) !== false || mb_strpos($content, $kw['keyword']) !== false) {
+            $matched[] = [
+                'keyword' => $kw['keyword'],
+                'sentiment' => $kw['sentiment'],
+                'weight' => $kw['weight']
+            ];
         }
+    }
 
-        $title = $title_pool[array_rand($title_pool)];
-        $content = $content_pool[array_rand($content_pool)];
-        $platform = $platforms[array_rand($platforms)];
-        $author = $authors[array_rand($authors)];
-
-        $matched = [];
-        foreach ($all_keywords as $kw) {
-            if (mb_strpos($title, $kw['keyword']) !== false || mb_strpos($content, $kw['keyword']) !== false) {
+    if (empty($matched)) {
+        $num_matched = rand(0, min(2, count($all_keywords)));
+        if ($num_matched > 0) {
+            $random_keys = array_rand($all_keywords, $num_matched);
+            if (!is_array($random_keys)) {
+                $random_keys = [$random_keys];
+            }
+            foreach ($random_keys as $rk) {
                 $matched[] = [
-                    'keyword' => $kw['keyword'],
-                    'sentiment' => $kw['sentiment'],
-                    'weight' => $kw['weight']
+                    'keyword' => $all_keywords[$rk]['keyword'],
+                    'sentiment' => $all_keywords[$rk]['sentiment'],
+                    'weight' => $all_keywords[$rk]['weight']
                 ];
             }
         }
+    }
 
-        if (empty($matched)) {
-            $num_matched = rand(0, min(2, count($all_keywords)));
-            if ($num_matched > 0) {
-                $random_keys = array_rand($all_keywords, $num_matched);
-                if (!is_array($random_keys)) {
-                    $random_keys = [$random_keys];
-                }
-                foreach ($random_keys as $rk) {
-                    $matched[] = [
-                        'keyword' => $all_keywords[$rk]['keyword'],
-                        'sentiment' => $all_keywords[$rk]['sentiment'],
-                        'weight' => $all_keywords[$rk]['weight']
-                    ];
-                }
+    $matched_json = !empty($matched) ? json_encode($matched, JSON_UNESCAPED_UNICODE) : null;
+
+    $hours_in_day = $crawl_time_offset_hours + rand(0, 23);
+    $minutes_offset = rand(0, 59);
+    $publish_time = date('Y-m-d H:i:s', time() + $hours_in_day * 3600 + $minutes_offset * 60);
+    $crawl_time = date('Y-m-d H:i:s', time() + $crawl_time_offset_hours * 3600);
+
+    $title_safe = mysqli_real_escape_string($conn, $title);
+    $content_safe = mysqli_real_escape_string($conn, $content);
+    $platform_safe = mysqli_real_escape_string($conn, $platform);
+    $author_safe = mysqli_real_escape_string($conn, $author);
+    $matched_safe = $matched_json ? mysqli_real_escape_string($conn, $matched_json) : null;
+
+    $sql = "INSERT INTO opinion_data (title, content, source_platform, sentiment, matched_keywords, publish_time, crawl_time, author) 
+            VALUES ('$title_safe', '$content_safe', '$platform_safe', $sentiment, " . ($matched_safe ? "'$matched_safe'" : 'NULL') . ", '$publish_time', '$crawl_time', '$author_safe')";
+
+    return mysqli_query($conn, $sql);
+}
+
+function generateOpinionData() {
+    global $conn;
+
+    $inserted = 0;
+
+    $yesterday_start = date('Y-m-d 00:00:00', strtotime('-1 day'));
+    $yesterday_end = date('Y-m-d 23:59:59', strtotime('-1 day'));
+    $yesterday_count_sql = "SELECT COUNT(*) as cnt FROM opinion_data WHERE crawl_time >= '$yesterday_start' AND crawl_time <= '$yesterday_end'";
+    $yesterday_result = mysqli_query($conn, $yesterday_count_sql);
+    $yesterday_count = 0;
+    if ($row = mysqli_fetch_assoc($yesterday_result)) {
+        $yesterday_count = intval($row['cnt']);
+    }
+
+    if ($yesterday_count < 10) {
+        $yesterday_needed = 10 - $yesterday_count;
+        for ($i = 0; $i < $yesterday_needed; $i++) {
+            if (generateSingleOpinion(-24 - rand(0, 12))) {
+                $inserted++;
             }
         }
+    }
 
-        $matched_json = !empty($matched) ? json_encode($matched, JSON_UNESCAPED_UNICODE) : null;
-
-        $hours_offset = rand(-24, 0);
-        $minutes_offset = rand(-59, 0);
-        $publish_time = date('Y-m-d H:i:s', time() + $hours_offset * 3600 + $minutes_offset * 60);
-
-        $title_safe = mysqli_real_escape_string($conn, $title);
-        $content_safe = mysqli_real_escape_string($conn, $content);
-        $platform_safe = mysqli_real_escape_string($conn, $platform);
-        $author_safe = mysqli_real_escape_string($conn, $author);
-        $matched_safe = $matched_json ? mysqli_real_escape_string($conn, $matched_json) : null;
-
-        $sql = "INSERT INTO opinion_data (title, content, source_platform, sentiment, matched_keywords, publish_time, author) 
-                VALUES ('$title_safe', '$content_safe', '$platform_safe', $sentiment, " . ($matched_safe ? "'$matched_safe'" : 'NULL') . ", '$publish_time', '$author_safe')";
-
-        if (mysqli_query($conn, $sql)) {
+    $today_count = rand(3, 8);
+    for ($i = 0; $i < $today_count; $i++) {
+        if (generateSingleOpinion(-rand(0, 12))) {
             $inserted++;
         }
     }

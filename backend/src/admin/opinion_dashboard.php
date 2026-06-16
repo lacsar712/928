@@ -75,8 +75,8 @@ check_login();
                                 </div>
                                 <div class="stat-value" id="statToday">0</div>
                                 <i class="bi bi-database-fill-gear stat-icon"></i>
-                                <div class="text-muted small mt-2">
-                                    <i class="bi bi-clock-history me-1"></i>实时更新中...
+                                <div class="small mt-2" id="todayTrendBox">
+                                    <i class="bi bi-dash me-1"></i>较昨日 <span id="todayTrend">--</span>
                                 </div>
                             </div>
                         </div>
@@ -87,8 +87,8 @@ check_login();
                                 </div>
                                 <div class="stat-value" id="statNegativeRatio">0%</div>
                                 <i class="bi bi-sign-danger-fill stat-icon"></i>
-                                <div class="text-muted small mt-2">
-                                    <i class="bi bi-arrow-up me-1"></i>较昨日 <span id="negativeTrend">+0.0%</span>
+                                <div class="small mt-2" id="negativeTrendBox">
+                                    <i class="bi bi-dash me-1"></i>较昨日 <span id="negativeTrend">--</span>
                                 </div>
                             </div>
                         </div>
@@ -270,17 +270,59 @@ check_login();
             loadOpinions();
         }
 
+        function formatTrend(diff, isPercentage = false, isInverse = false) {
+            const prefix = diff > 0 ? '+' : '';
+            const value = isPercentage ? diff.toFixed(1) + '%' : diff.toFixed(1) + '%';
+            const icon = diff > 0 ? 'bi-arrow-up' : (diff < 0 ? 'bi-arrow-down' : 'bi-dash');
+            const trendClass = isInverse
+                ? (diff > 0 ? 'trend-bad' : (diff < 0 ? 'trend-good' : 'trend-flat'))
+                : (diff > 0 ? 'trend-good' : (diff < 0 ? 'trend-bad' : 'trend-flat'));
+            return {
+                text: prefix + value,
+                icon: icon,
+                class: trendClass
+            };
+        }
+
+        function updateTrendElement(elementId, boxId, diff, hasYesterdayData, isInverse) {
+            const element = document.getElementById(elementId);
+            const box = document.getElementById(boxId);
+
+            if (!hasYesterdayData) {
+                element.textContent = '--';
+                box.className = 'text-muted small mt-2';
+                const iconElement = box.querySelector('i');
+                if (iconElement) {
+                    iconElement.className = 'bi bi-dash me-1';
+                }
+                return;
+            }
+
+            const trend = formatTrend(diff, true, isInverse);
+            element.textContent = trend.text;
+            box.className = 'small mt-2 ' + trend.class;
+
+            const iconElement = box.querySelector('i');
+            if (iconElement) {
+                iconElement.className = 'bi ' + trend.icon + ' me-1';
+            }
+        }
+
         function loadStats() {
             fetch('opinion_api.php?action=stats')
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 200) {
                         const stats = data.data;
+                        const hasYesterday = stats.yesterday_negative_ratio !== undefined;
+
                         animateNumber('statToday', stats.today_count);
                         animateNumber('statNegativeRatio', stats.negative_ratio, '%');
                         animateNumber('statMatched', stats.matched_keywords_count);
-                        document.getElementById('negativeTrend').textContent = '+' + (Math.random() * 5).toFixed(1) + '%';
-                        document.getElementById('keywordCoverage').textContent = 15;
+                        document.getElementById('keywordCoverage').textContent = stats.keyword_coverage || 0;
+
+                        updateTrendElement('todayTrend', 'todayTrendBox', stats.today_count_diff || 0, hasYesterday, false);
+                        updateTrendElement('negativeTrend', 'negativeTrendBox', stats.negative_ratio_diff || 0, hasYesterday, true);
 
                         renderPieChart(stats.sentiment);
                         renderBarChart(stats.platforms);
